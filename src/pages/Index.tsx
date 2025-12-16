@@ -62,13 +62,13 @@ const Index = () => {
           </h2>
           <div className="space-y-6 text-lg leading-relaxed text-muted-foreground md:text-xl">
             <p>
-              Frostbite is a venture capital firm investing in bold founders building transformative technologies. We partner with visionaries who dare to reshape industries and challenge the status quo.
+              Frostbite is a defence venture capital fund investing in single and dual-use defence technologies. We partner with visionary founders building critical capabilities to strengthen Western security and sovereignty.
             </p>
             <p>
-              Founded on the belief that greatness emerges from adversity, we seek out companies forged in the crucible of innovation—those that thrive where others falter.
+              Founded in Canada by a Canadian Armed Forces veteran, we understand the unique demands of defence innovation. Our mission is clear: back companies that protect Western democracies and safeguard the Arctic.
             </p>
             <p className="text-frost">
-              Our approach is simple: identify exceptional talent, provide strategic capital, and stand back as they build the future.
+              We bridge the gap between military insight and entrepreneurial ambition—deploying capital where it matters most for national security.
             </p>
           </div>
         </div>
@@ -82,27 +82,27 @@ const Index = () => {
           </h2>
           <div className="grid gap-8 md:grid-cols-2 lg:gap-12">
             <div className="space-y-4 border-l-2 border-frost/30 pl-6">
-              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Deep Tech</h3>
+              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Cold Weather Technology</h3>
               <p className="text-muted-foreground">
-                We invest in foundational technologies that create lasting competitive advantages—AI infrastructure, quantum computing, and advanced materials.
+                Investing in systems engineered for extreme environments—Arctic-grade equipment, cold climate logistics, and polar operational capabilities.
               </p>
             </div>
             <div className="space-y-4 border-l-2 border-frost/30 pl-6">
-              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Climate Innovation</h3>
+              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Artificial Intelligence</h3>
               <p className="text-muted-foreground">
-                Supporting breakthrough solutions addressing the climate crisis—from carbon capture to sustainable energy systems.
+                Backing AI solutions for defence applications—autonomous systems, intelligence analysis, decision support, and predictive threat detection.
               </p>
             </div>
             <div className="space-y-4 border-l-2 border-frost/30 pl-6">
               <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Digital Infrastructure</h3>
               <p className="text-muted-foreground">
-                Backing the picks and shovels of the digital economy—developer tools, security platforms, and cloud infrastructure.
+                Supporting secure communications, cyber defence platforms, and resilient networks that form the backbone of modern defence operations.
               </p>
             </div>
             <div className="space-y-4 border-l-2 border-frost/30 pl-6">
-              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Health & Bio</h3>
+              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Deep Tech</h3>
               <p className="text-muted-foreground">
-                Investing in next-generation healthcare technologies that extend human healthspan and democratize access to care.
+                Investing in foundational technologies—advanced materials, quantum sensing, space systems, and next-generation propulsion.
               </p>
             </div>
           </div>
