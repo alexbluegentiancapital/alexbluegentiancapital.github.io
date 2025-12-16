@@ -1,8 +1,11 @@
 import IceParticles from '@/components/IceParticles';
+import SnowStorm from '@/components/SnowStorm';
 
 const Index = () => {
   return (
     <div className="relative w-full overflow-hidden bg-background">
+      {/* Snow Storm Effect */}
+      <SnowStorm />
       {/* Hero Section */}
       <section className="relative min-h-screen w-full overflow-hidden">
         {/* Ice Particles */}
