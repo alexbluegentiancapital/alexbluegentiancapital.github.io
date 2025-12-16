@@ -1,8 +1,11 @@
 import IceParticles from '@/components/IceParticles';
+import NeonLines from '@/components/NeonLines';
 
 const Index = () => {
   return (
     <div className="relative w-full overflow-hidden bg-background">
+      {/* Neon Lines Background */}
+      <NeonLines />
       {/* Hero Section */}
       <section className="relative min-h-screen w-full overflow-hidden">
         {/* Ice Particles */}
