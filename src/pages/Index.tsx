@@ -25,15 +25,17 @@ const Index = () => {
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
         <div className="text-center">
           {/* Logo/Wordmark */}
-          <h1 
-            className="mb-4 text-6xl font-bold uppercase tracking-[0.3em] text-foreground opacity-0 animate-fade-in-up animate-glow-pulse sm:text-7xl md:text-8xl lg:text-9xl"
+          <div 
+            className="mb-4 opacity-0 animate-fade-in-up"
             style={{ animationDelay: '0.2s' }}
           >
-            Frostbite
-          </h1>
+            <h1 className="text-6xl font-bold uppercase tracking-[0.3em] text-foreground animate-glow-pulse sm:text-7xl md:text-8xl lg:text-9xl">
+              Frostbite
+            </h1>
+          </div>
           
           {/* Tagline */}
-          <p 
+          <p
             className="text-glow-subtle text-lg font-light uppercase tracking-[0.4em] text-frost opacity-0 animate-fade-in-up sm:text-xl md:text-2xl"
             style={{ animationDelay: '0.6s' }}
           >
