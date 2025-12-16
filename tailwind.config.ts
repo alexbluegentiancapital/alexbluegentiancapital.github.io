@@ -112,6 +112,20 @@ export default {
             textShadow: "0 0 30px hsl(195 100% 80% / 0.9), 0 0 60px hsl(195 100% 70% / 0.7), 0 0 100px hsl(195 100% 60% / 0.5), 0 0 150px hsl(195 100% 50% / 0.3)",
           },
         },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0) translateX(0)",
+          },
+          "25%": {
+            transform: "translateY(-20px) translateX(10px)",
+          },
+          "50%": {
+            transform: "translateY(-10px) translateX(-10px)",
+          },
+          "75%": {
+            transform: "translateY(-30px) translateX(5px)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -119,6 +133,7 @@ export default {
         "fade-in-up": "fade-in-up 1s ease-out forwards",
         "fade-in": "fade-in 1.5s ease-out forwards",
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
+        "float": "float 20s ease-in-out infinite",
       },
     },
   },
