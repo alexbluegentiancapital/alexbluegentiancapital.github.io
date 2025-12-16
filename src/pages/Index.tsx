@@ -58,7 +58,7 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section className="relative min-h-screen w-full px-6 py-24 md:py-32">
+      <section className="relative z-10 min-h-screen w-full px-6 py-24 md:py-32">
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             About
@@ -78,7 +78,7 @@ const Index = () => {
       </section>
 
       {/* Thesis Section */}
-      <section className="relative min-h-screen w-full bg-card/30 px-6 py-24 md:py-32">
+      <section className="relative z-10 min-h-screen w-full px-6 py-24 md:py-32">
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             Thesis
@@ -113,7 +113,7 @@ const Index = () => {
       </section>
 
       {/* Portfolio Section */}
-      <section className="relative min-h-screen w-full px-6 py-24 md:py-32">
+      <section className="relative z-10 min-h-screen w-full px-6 py-24 md:py-32">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             Portfolio
@@ -129,7 +129,7 @@ const Index = () => {
             ].map((company) => (
               <div
                 key={company.name}
-                className="group relative overflow-hidden rounded-lg border border-border/50 bg-card/50 p-6 transition-all duration-300 hover:border-frost/50 hover:bg-card/80"
+                className="group relative overflow-hidden rounded-lg border border-border/50 bg-card/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-frost/50 hover:bg-card/80"
               >
                 <h3 className="mb-2 text-xl font-semibold text-foreground transition-colors group-hover:text-frost">
                   {company.name}
