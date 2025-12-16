@@ -1,6 +1,10 @@
+import IceParticles from '@/components/IceParticles';
+
 const Index = () => {
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
+      {/* Ice Particles */}
+      <IceParticles />
       {/* Video Background */}
       <video
         autoPlay
