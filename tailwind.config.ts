@@ -126,6 +126,24 @@ export default {
             transform: "translateY(-30px) translateX(5px)",
           },
         },
+        "snowfall": {
+          "0%": {
+            transform: "translateY(-10vh) translateX(0)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "translateY(110vh) translateX(var(--drift, 0px))",
+            opacity: "0.3",
+          },
+        },
+        "snowdrift": {
+          "0%, 100%": {
+            transform: "translateX(0)",
+          },
+          "50%": {
+            transform: "translateX(calc(var(--drift, 0px) * 0.5))",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
