@@ -7,6 +7,7 @@ interface Snowflake {
   duration: number;
   delay: number;
   drift: number;
+  opacity: number;
 }
 
 const SnowStorm = () => {
@@ -17,14 +18,15 @@ const SnowStorm = () => {
   useEffect(() => {
     const generateSnowflakes = () => {
       const flakes: Snowflake[] = [];
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 120; i++) {
         flakes.push({
           id: i,
           x: Math.random() * 100,
           size: Math.random() * 4 + 2,
-          duration: Math.random() * 3 + 2,
-          delay: Math.random() * 5,
-          drift: (Math.random() - 0.5) * 100,
+          duration: Math.random() * 4 + 3,
+          delay: Math.random() * 8,
+          drift: (Math.random() - 0.5) * 150,
+          opacity: Math.random() * 0.6 + 0.4,
         });
       }
       setSnowflakes(flakes);
@@ -49,24 +51,41 @@ const SnowStorm = () => {
     <div 
       ref={containerRef} 
       className="fixed inset-0 overflow-hidden pointer-events-none z-10"
-      style={{ opacity: 0.3 + scrollIntensity * 0.7 }}
+      style={{ opacity: 0.2 + scrollIntensity * 0.8 }}
     >
+      <style>
+        {snowflakes.map((flake) => {
+          const speedMultiplier = 1 + scrollIntensity * 2;
+          const driftAmount = flake.drift * (1 + scrollIntensity * 2);
+          return `
+            @keyframes snowfall-${flake.id} {
+              0% {
+                transform: translateY(-20px) translateX(0px);
+                opacity: ${flake.opacity};
+              }
+              100% {
+                transform: translateY(100vh) translateX(${driftAmount}px);
+                opacity: ${flake.opacity * 0.3};
+              }
+            }
+          `;
+        }).join('\n')}
+      </style>
       {snowflakes.map((flake) => {
         const speedMultiplier = 1 + scrollIntensity * 2;
-        const driftMultiplier = 1 + scrollIntensity * 3;
         
         return (
           <div
             key={flake.id}
-            className="absolute rounded-full bg-frost/80"
+            className="absolute rounded-full bg-frost"
             style={{
               left: `${flake.x}%`,
+              top: '-20px',
               width: `${flake.size}px`,
               height: `${flake.size}px`,
-              animation: `snowfall ${flake.duration / speedMultiplier}s linear infinite, snowdrift ${flake.duration / speedMultiplier}s ease-in-out infinite`,
-              animationDelay: `${flake.delay}s`,
-              boxShadow: `0 0 ${flake.size}px hsl(var(--frost) / 0.5)`,
-              ['--drift' as string]: `${flake.drift * driftMultiplier}px`,
+              opacity: flake.opacity,
+              animation: `snowfall-${flake.id} ${flake.duration / speedMultiplier}s linear ${flake.delay}s infinite`,
+              boxShadow: `0 0 ${flake.size * 2}px hsl(var(--frost) / 0.6)`,
             }}
           />
         );
