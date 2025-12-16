@@ -1,13 +1,13 @@
 import IceParticles from '@/components/IceParticles';
-import NeonLines from '@/components/NeonLines';
+import NeonGrid from '@/components/NeonLines';
 
 const Index = () => {
   return (
     <div className="relative w-full overflow-hidden bg-background">
-      {/* Neon Lines Background */}
-      <NeonLines />
       {/* Hero Section */}
       <section className="relative min-h-screen w-full overflow-hidden">
+        {/* Neon Grid Background - only in hero */}
+        <NeonGrid />
         {/* Ice Particles */}
         <IceParticles />
         {/* Video Background */}
@@ -58,7 +58,7 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section className="relative z-10 min-h-screen w-full px-6 py-24 md:py-32">
+      <section className="relative min-h-screen w-full bg-background px-6 py-24 md:py-32">
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             About
@@ -78,7 +78,7 @@ const Index = () => {
       </section>
 
       {/* Thesis Section */}
-      <section className="relative z-10 min-h-screen w-full px-6 py-24 md:py-32">
+      <section className="relative min-h-screen w-full bg-background px-6 py-24 md:py-32">
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             Thesis
@@ -97,15 +97,15 @@ const Index = () => {
               </p>
             </div>
             <div className="space-y-4 border-l-2 border-frost/30 pl-6">
-              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Digital Infrastructure</h3>
+              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Web3 Infrastructure</h3>
               <p className="text-muted-foreground">
-                Backing the picks and shovels of the digital economy—developer tools, security platforms, and cloud infrastructure.
+                Backing the protocols and platforms that will power the next generation of decentralized applications.
               </p>
             </div>
             <div className="space-y-4 border-l-2 border-frost/30 pl-6">
-              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Health & Bio</h3>
+              <h3 className="text-xl font-semibold uppercase tracking-wider text-frost">Frontier Bio</h3>
               <p className="text-muted-foreground">
-                Investing in next-generation healthcare technologies that extend human healthspan and democratize access to care.
+                Investing in revolutionary approaches to human health, longevity, and biological engineering.
               </p>
             </div>
           </div>
@@ -113,19 +113,19 @@ const Index = () => {
       </section>
 
       {/* Portfolio Section */}
-      <section className="relative z-10 min-h-screen w-full px-6 py-24 md:py-32">
+      <section className="relative min-h-screen w-full bg-background px-6 py-24 md:py-32">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             Portfolio
           </h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { name: 'Vertex AI', sector: 'Deep Tech', stage: 'Series B' },
-              { name: 'CarbonZero', sector: 'Climate', stage: 'Series A' },
-              { name: 'NeuralStack', sector: 'Infrastructure', stage: 'Seed' },
-              { name: 'BioGenix', sector: 'Health & Bio', stage: 'Series A' },
-              { name: 'QuantumCore', sector: 'Deep Tech', stage: 'Series B' },
-              { name: 'GridFlow', sector: 'Climate', stage: 'Series A' },
+              { name: 'CryoLabs', sector: 'Deep Tech' },
+              { name: 'Permafrost AI', sector: 'AI Infrastructure' },
+              { name: 'Glacial Systems', sector: 'Climate Tech' },
+              { name: 'Arctic Protocol', sector: 'Web3' },
+              { name: 'Tundra Bio', sector: 'Frontier Bio' },
+              { name: 'IceCore', sector: 'Deep Tech' },
             ].map((company) => (
               <div
                 key={company.name}
@@ -134,10 +134,9 @@ const Index = () => {
                 <h3 className="mb-2 text-xl font-semibold text-foreground transition-colors group-hover:text-frost">
                   {company.name}
                 </h3>
-                <p className="text-sm text-muted-foreground">{company.sector}</p>
-                <span className="mt-4 inline-block rounded-full border border-frost/30 px-3 py-1 text-xs uppercase tracking-wider text-frost">
-                  {company.stage}
-                </span>
+                <p className="text-sm uppercase tracking-wider text-muted-foreground">
+                  {company.sector}
+                </p>
               </div>
             ))}
           </div>
