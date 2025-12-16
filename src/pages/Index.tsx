@@ -1,13 +1,14 @@
 import IceParticles from '@/components/IceParticles';
-import NeonGrid from '@/components/NeonLines';
+import NeonGrid from '@/components/NeonGrid';
 
 const Index = () => {
   return (
     <div className="relative w-full overflow-hidden bg-background">
+      {/* Neon Grid Background - fixed behind everything */}
+      <NeonGrid />
+      
       {/* Hero Section */}
       <section className="relative min-h-screen w-full overflow-hidden">
-        {/* Neon Grid Background - only in hero */}
-        <NeonGrid />
         {/* Ice Particles */}
         <IceParticles />
         {/* Video Background */}
