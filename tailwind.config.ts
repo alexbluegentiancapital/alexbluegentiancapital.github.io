@@ -104,12 +104,21 @@ export default {
             opacity: "1",
           },
         },
+        "glow-pulse": {
+          "0%, 100%": {
+            textShadow: "0 0 40px hsl(195 100% 70% / 0.4), 0 0 80px hsl(195 100% 70% / 0.2), 0 0 120px hsl(195 100% 70% / 0.1)",
+          },
+          "50%": {
+            textShadow: "0 0 60px hsl(195 100% 70% / 0.6), 0 0 100px hsl(195 100% 70% / 0.4), 0 0 140px hsl(195 100% 70% / 0.2)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in-up": "fade-in-up 1s ease-out forwards",
         "fade-in": "fade-in 1.5s ease-out forwards",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
     },
   },

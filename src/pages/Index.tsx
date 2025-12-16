@@ -26,7 +26,7 @@ const Index = () => {
         <div className="text-center">
           {/* Logo/Wordmark */}
           <h1 
-            className="text-glow mb-4 text-6xl font-bold uppercase tracking-[0.3em] text-foreground opacity-0 animate-fade-in-up sm:text-7xl md:text-8xl lg:text-9xl"
+            className="mb-4 text-6xl font-bold uppercase tracking-[0.3em] text-foreground opacity-0 animate-fade-in-up animate-glow-pulse sm:text-7xl md:text-8xl lg:text-9xl"
             style={{ animationDelay: '0.2s' }}
           >
             Frostbite
