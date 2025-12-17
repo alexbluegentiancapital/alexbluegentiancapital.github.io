@@ -115,17 +115,18 @@ const Index = () => {
           <h2 className="mb-12 text-4xl font-bold uppercase tracking-[0.2em] text-foreground md:text-5xl lg:text-6xl">
             Portfolio
           </h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
             {[
-              { name: 'Vertex AI', sector: 'Deep Tech', stage: 'Series B' },
-              { name: 'CarbonZero', sector: 'Climate', stage: 'Series A' },
-              { name: 'NeuralStack', sector: 'Infrastructure', stage: 'Seed' },
-              { name: 'BioGenix', sector: 'Health & Bio', stage: 'Series A' },
-              { name: 'QuantumCore', sector: 'Deep Tech', stage: 'Series B' },
-              { name: 'GridFlow', sector: 'Climate', stage: 'Series A' },
+              { name: 'Dominion Dynamics', link: 'https://www.dominion-dynamics.com/', sector: 'Cold Weather Technology & Digital Infrastructure', stage: 'Seed' },
+              { name: 'Irréversible', link: 'https://www.irreversible.tech/', sector: 'Deep Tech', stage: 'Seed' },
+              { name: 'Arctic Training Centre', link: 'https://www.arctictrainingcentre.com/', sector: 'Digital Infrastructure & Cold Weather Technology', stage: 'Seed' },
+              { name: 'Sentradel', link: 'https://www.sentradel.com/', sector: 'Artificial Intelligence', stage: 'Seed' },
             ].map((company) => (
-              <div
+              <a
                 key={company.name}
+                href={company.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group relative overflow-hidden rounded-lg border border-border/50 bg-card/50 p-6 transition-all duration-300 hover:border-frost/50 hover:bg-card/80"
               >
                 <h3 className="mb-2 text-xl font-semibold text-foreground transition-colors group-hover:text-frost">
@@ -135,7 +136,7 @@ const Index = () => {
                 <span className="mt-4 inline-block rounded-full border border-frost/30 px-3 py-1 text-xs uppercase tracking-wider text-frost">
                   {company.stage}
                 </span>
-              </div>
+              </a>
             ))}
           </div>
         </div>
