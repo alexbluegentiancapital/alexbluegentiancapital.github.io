@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -11,14 +12,34 @@ const Index = () => {
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent",
-      description: "Thank you for reaching out. We'll be in touch soon.",
-    });
-    setFormData({ name: '', email: '', message: '' });
+    setIsSubmitting(true);
+    
+    try {
+      const { error } = await supabase.functions.invoke('send-contact-email', {
+        body: formData
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Message Sent",
+        description: "Thank you for reaching out. We'll be in touch soon.",
+      });
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -168,9 +189,6 @@ const Index = () => {
           <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
             Contact
           </h2>
-          <p className="mb-8 text-base text-muted-foreground sm:text-lg">
-            Interested in partnering with us or exploring investment opportunities? Reach out below.
-          </p>
           
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -201,9 +219,10 @@ const Index = () => {
             />
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full bg-frost text-background hover:bg-frost/90 sm:w-auto"
             >
-              Send Message
+              {isSubmitting ? 'Sending...' : 'Send Message'}
             </Button>
           </form>
 
