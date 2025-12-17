@@ -1,7 +1,4 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,24 +18,37 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { name, email, message }: ContactRequest = await req.json();
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
 
     console.log("Sending contact email from:", name, email);
 
-    const emailResponse = await resend.emails.send({
-      from: "Frostbite Contact <onboarding@resend.dev>",
-      to: ["info@bluegentiancapital.com"],
-      subject: `New Contact Form Submission from ${name}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `,
-      reply_to: email,
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Frostbite Contact <onboarding@resend.dev>",
+        to: ["info@bluegentiancapital.com"],
+        subject: `New Contact Form Submission from ${name}`,
+        html: `
+          <h2>New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>
+        `,
+        reply_to: email,
+      }),
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    const data = await response.json();
+    console.log("Resend API response:", data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to send email");
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
