@@ -150,33 +150,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* News Section */}
-      <section className="relative w-full px-4 py-16 sm:px-6 md:py-24 lg:py-32">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
-            News
-          </h2>
-          <div className="space-y-4">
-            <a
-              href="https://www.theglobeandmail.com/business/economy/article-dominion-dynamics-arctic-sensor-nodes-seed-funding/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-6"
-            >
-              <span className="mb-2 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
-                The Globe and Mail
-              </span>
-              <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors group-hover:text-frost sm:text-xl">
-                Dominion Dynamics, vying to become Canadian defence 'neoprime,' raises $21-million led by Georgian
-              </h3>
-              <p className="text-xs text-muted-foreground sm:text-sm">
-                Portfolio company Dominion Dynamics secures seed funding to advance Arctic sensor node technology for Canadian defence.
-              </p>
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Portfolio Section */}
       <section className="relative min-h-screen w-full bg-card/30 px-4 py-16 sm:px-6 md:py-24 lg:py-32">
         <div className="mx-auto max-w-5xl">
@@ -206,6 +179,33 @@ const Index = () => {
                 </span>
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* News Section */}
+      <section className="relative w-full px-4 py-16 sm:px-6 md:py-24 lg:py-32">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
+            News
+          </h2>
+          <div className="space-y-4">
+            <a
+              href="https://www.theglobeandmail.com/business/economy/article-dominion-dynamics-arctic-sensor-nodes-seed-funding/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-6"
+            >
+              <span className="mb-2 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
+                The Globe and Mail
+              </span>
+              <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors group-hover:text-frost sm:text-xl">
+                Dominion Dynamics, vying to become Canadian defence 'neoprime,' raises $21-million led by Georgian
+              </h3>
+              <p className="text-xs text-muted-foreground sm:text-sm">
+                Portfolio company Dominion Dynamics secures seed funding to advance Arctic sensor node technology for Canadian defence.
+              </p>
+            </a>
           </div>
         </div>
       </section>
