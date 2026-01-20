@@ -160,7 +160,7 @@ const Index = () => {
             {[
               { name: 'Dominion Dynamics', link: 'https://www.dominion-dynamics.com/', sector: 'Cold Weather Technology & Digital Infrastructure', stage: 'Pre-Seed' },
               { name: 'Irréversible', link: 'https://www.irreversible.tech/', sector: 'Deep Tech', stage: 'Pre-Seed' },
-              { name: 'Arctic Training Centre', link: 'https://www.arctictrainingcentre.com/', sector: 'Digital Infrastructure & Cold Weather Technology', stage: 'Pre-Seed' },
+              // { name: 'Arctic Training Centre', link: 'https://www.arctictrainingcentre.com/', sector: 'Digital Infrastructure & Cold Weather Technology', stage: 'Pre-Seed' },
               { name: 'Sentradel', link: 'https://www.sentradel.com/', sector: 'Artificial Intelligence', stage: 'Seed' },
             ].map((company) => (
               <a
