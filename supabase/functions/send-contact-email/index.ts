@@ -11,16 +11,67 @@ interface ContactRequest {
   message: string;
 }
 
+// Simple in-memory rate limiter
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 5; // max requests
+const RATE_WINDOW = 60 * 60 * 1000; // 1 hour in milliseconds
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip);
+
+  if (!record || now > record.resetTime) {
+    rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+    return false;
+  }
+
+  if (record.count >= RATE_LIMIT) {
+    return true;
+  }
+
+  record.count++;
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  // Try various headers that might contain the real IP
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0].trim();
+  }
+  
+  const realIP = req.headers.get("x-real-ip");
+  if (realIP) {
+    return realIP;
+  }
+
+  // Fallback
+  return "unknown";
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Rate limiting check
+    const clientIP = getClientIP(req);
+    if (isRateLimited(clientIP)) {
+      console.log(`Rate limited request from IP: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please try again later." }),
+        {
+          status: 429,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     const { name, email, message }: ContactRequest = await req.json();
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
 
-    console.log("Sending contact email from:", name, email);
+    console.log(`Contact form submission from IP: ${clientIP}`);
 
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
