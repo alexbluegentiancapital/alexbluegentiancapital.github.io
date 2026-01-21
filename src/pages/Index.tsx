@@ -96,12 +96,12 @@ const Index = () => {
       </section>
 
       {/* About Section */}
-      <section className="relative min-h-screen w-full px-4 py-16 sm:px-6 md:py-24 lg:py-32">
+      <section className="relative w-full px-4 py-12 sm:px-6 sm:py-16 md:py-24 lg:py-32">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
+          <h2 className="mb-6 text-2xl font-bold uppercase tracking-[0.1em] text-foreground sm:mb-8 sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
             About
           </h2>
-          <div className="space-y-4 text-base leading-relaxed text-muted-foreground sm:space-y-6 sm:text-lg md:text-xl">
+          <div className="space-y-3 text-sm leading-relaxed text-muted-foreground sm:space-y-4 sm:text-base md:space-y-6 md:text-lg lg:text-xl">
             <p>
               Frostbite is a defence venture capital fund investing in single and dual-use defence technologies. We partner with visionary founders building critical capabilities to strengthen Western security and sovereignty.
             </p>
@@ -116,33 +116,33 @@ const Index = () => {
       </section>
 
       {/* Thesis Section */}
-      <section className="relative min-h-screen w-full px-4 py-16 sm:px-6 md:py-24 lg:py-32">
+      <section className="relative w-full px-4 py-12 sm:px-6 sm:py-16 md:py-24 lg:py-32">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
+          <h2 className="mb-6 text-2xl font-bold uppercase tracking-[0.1em] text-foreground sm:mb-8 sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
             Thesis
           </h2>
-          <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:gap-12">
-            <div className="space-y-3 border-l-2 border-frost/30 pl-4 sm:space-y-4 sm:pl-6">
-              <h3 className="text-lg font-semibold uppercase tracking-wider text-frost sm:text-xl">Cold Weather Technology</h3>
-              <p className="text-sm text-muted-foreground sm:text-base">
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2 md:gap-8 lg:gap-12">
+            <div className="space-y-2 border-l-2 border-frost/30 pl-3 sm:space-y-3 sm:pl-4 md:pl-6">
+              <h3 className="text-base font-semibold uppercase tracking-wider text-frost sm:text-lg md:text-xl">Cold Weather Technology</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm md:text-base">
                 Investing in systems engineered for extreme environments—Arctic-grade equipment, cold climate logistics, and polar operational capabilities.
               </p>
             </div>
-            <div className="space-y-3 border-l-2 border-frost/30 pl-4 sm:space-y-4 sm:pl-6">
-              <h3 className="text-lg font-semibold uppercase tracking-wider text-frost sm:text-xl">Artificial Intelligence</h3>
-              <p className="text-sm text-muted-foreground sm:text-base">
+            <div className="space-y-2 border-l-2 border-frost/30 pl-3 sm:space-y-3 sm:pl-4 md:pl-6">
+              <h3 className="text-base font-semibold uppercase tracking-wider text-frost sm:text-lg md:text-xl">Artificial Intelligence</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm md:text-base">
                 Backing AI solutions for defence applications—autonomous systems, intelligence analysis, decision support, and predictive threat detection.
               </p>
             </div>
-            <div className="space-y-3 border-l-2 border-frost/30 pl-4 sm:space-y-4 sm:pl-6">
-              <h3 className="text-lg font-semibold uppercase tracking-wider text-frost sm:text-xl">Digital Infrastructure</h3>
-              <p className="text-sm text-muted-foreground sm:text-base">
+            <div className="space-y-2 border-l-2 border-frost/30 pl-3 sm:space-y-3 sm:pl-4 md:pl-6">
+              <h3 className="text-base font-semibold uppercase tracking-wider text-frost sm:text-lg md:text-xl">Digital Infrastructure</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm md:text-base">
                 Supporting secure communications, cyber defence platforms, and resilient networks that form the backbone of modern defence operations.
               </p>
             </div>
-            <div className="space-y-3 border-l-2 border-frost/30 pl-4 sm:space-y-4 sm:pl-6">
-              <h3 className="text-lg font-semibold uppercase tracking-wider text-frost sm:text-xl">Deep Tech</h3>
-              <p className="text-sm text-muted-foreground sm:text-base">
+            <div className="space-y-2 border-l-2 border-frost/30 pl-3 sm:space-y-3 sm:pl-4 md:pl-6">
+              <h3 className="text-base font-semibold uppercase tracking-wider text-frost sm:text-lg md:text-xl">Deep Tech</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm md:text-base">
                 Investing in foundational technologies—advanced materials, quantum sensing, space systems, and next-generation propulsion.
               </p>
             </div>
@@ -151,12 +151,12 @@ const Index = () => {
       </section>
 
       {/* Portfolio Section */}
-      <section className="relative min-h-screen w-full bg-card/30 px-4 py-16 sm:px-6 md:py-24 lg:py-32">
+      <section className="relative w-full bg-card/30 px-4 py-12 sm:px-6 sm:py-16 md:py-24 lg:py-32">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
+          <h2 className="mb-6 text-2xl font-bold uppercase tracking-[0.1em] text-foreground sm:mb-8 sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
             Portfolio
           </h2>
-          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 md:gap-6">
             {[
               { name: 'Dominion Dynamics', link: 'https://www.dominion-dynamics.com/', sector: 'Cold Weather Technology & Digital Infrastructure', stage: 'Pre-Seed' },
               { name: 'Irréversible', link: 'https://www.irreversible.tech/', sector: 'Deep Tech', stage: 'Pre-Seed' },
@@ -168,13 +168,13 @@ const Index = () => {
                 href={company.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative overflow-hidden rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-6"
+                className="group relative overflow-hidden rounded-lg border border-border/50 bg-card/50 p-3 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-4 md:p-6"
               >
-                <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors group-hover:text-frost sm:text-xl">
+                <h3 className="mb-1 text-base font-semibold text-foreground transition-colors group-hover:text-frost sm:mb-2 sm:text-lg md:text-xl">
                   {company.name}
                 </h3>
                 <p className="text-xs text-muted-foreground sm:text-sm">{company.sector}</p>
-                <span className="mt-3 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:mt-4 sm:px-3 sm:py-1 sm:text-xs">
+                <span className="mt-2 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:mt-3 sm:px-3 sm:py-1 sm:text-xs">
                   {company.stage}
                 </span>
               </a>
@@ -184,22 +184,22 @@ const Index = () => {
       </section>
 
       {/* News Section */}
-      <section className="relative w-full px-4 py-16 sm:px-6 md:py-24 lg:py-32">
+      <section className="relative w-full px-4 py-12 sm:px-6 sm:py-16 md:py-24 lg:py-32">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
+          <h2 className="mb-6 text-2xl font-bold uppercase tracking-[0.1em] text-foreground sm:mb-8 sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
             News
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <a
               href="https://www.theglobeandmail.com/business/economy/article-dominion-dynamics-arctic-sensor-nodes-seed-funding/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-6"
+              className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-3 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-4 md:p-6"
             >
-              <span className="mb-2 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
+              <span className="mb-1 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:mb-2 sm:px-3 sm:py-1 sm:text-xs">
                 The Globe and Mail
               </span>
-              <h3 className="mb-2 text-lg font-semibold text-foreground transition-colors group-hover:text-frost sm:text-xl">
+              <h3 className="mb-1 text-base font-semibold text-foreground transition-colors group-hover:text-frost sm:mb-2 sm:text-lg md:text-xl">
                 Dominion Dynamics, vying to become Canadian defence 'neoprime,' raises $21-million led by Georgian
               </h3>
               <p className="text-xs text-muted-foreground sm:text-sm">
@@ -211,14 +211,14 @@ const Index = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="relative w-full bg-card/30 px-4 py-16 sm:px-6 md:py-24 lg:py-32">
+      <section className="relative w-full bg-card/30 px-4 py-12 sm:px-6 sm:py-16 md:py-24 lg:py-32">
         <div className="mx-auto max-w-2xl">
-          <h2 className="mb-8 text-3xl font-bold uppercase tracking-[0.1em] text-foreground sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
+          <h2 className="mb-6 text-2xl font-bold uppercase tracking-[0.1em] text-foreground sm:mb-8 sm:text-4xl sm:tracking-[0.15em] md:mb-12 md:text-5xl md:tracking-[0.2em] lg:text-6xl">
             Contact
           </h2>
           
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-6">
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
               <Input
                 type="text"
                 placeholder="Name"
@@ -241,7 +241,7 @@ const Index = () => {
               value={formData.message}
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               required
-              rows={5}
+              rows={4}
               className="border-border/50 bg-background/50 placeholder:text-muted-foreground/50 focus:border-frost"
             />
             <Button
@@ -253,7 +253,7 @@ const Index = () => {
             </Button>
           </form>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border/30 pt-8 sm:mt-12 sm:gap-6 sm:pt-12">
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border/30 pt-6 sm:mt-8 sm:gap-4 sm:pt-8 md:mt-12 md:gap-6 md:pt-12">
             <a
               href="mailto:info@frostbite.vc"
               className="flex items-center gap-2 text-muted-foreground transition-colors hover:text-frost"
