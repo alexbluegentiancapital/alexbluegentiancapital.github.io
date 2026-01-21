@@ -80,7 +80,7 @@ const Index = () => {
               <img 
                 src={frostbiteLogo} 
                 alt="Frostbite" 
-                className="h-16 w-auto animate-glow-pulse sm:h-24 md:h-32 lg:h-48 drop-shadow-[0_0_25px_rgba(155,220,255,0.4)]"
+                className="h-16 w-auto animate-glow-pulse sm:h-20 md:h-24 lg:h-32 drop-shadow-[0_0_25px_rgba(155,220,255,0.4)]"
               />
             </div>
             
