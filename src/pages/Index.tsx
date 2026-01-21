@@ -1,4 +1,5 @@
 import IceParticles from '@/components/IceParticles';
+import frostbiteLogo from '@/assets/frostbite-logo.png';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,9 +77,11 @@ const Index = () => {
               className="mb-4 opacity-0 animate-fade-in-up"
               style={{ animationDelay: '0.2s' }}
             >
-              <h1 className="text-4xl font-bold uppercase tracking-[0.15em] text-foreground animate-glow-pulse sm:text-5xl sm:tracking-[0.2em] md:text-7xl md:tracking-[0.25em] lg:text-9xl lg:tracking-[0.3em]">
-                Frostbite
-              </h1>
+              <img 
+                src={frostbiteLogo} 
+                alt="Frostbite" 
+                className="h-16 w-auto animate-glow-pulse sm:h-24 md:h-32 lg:h-48 drop-shadow-[0_0_25px_rgba(155,220,255,0.4)]"
+              />
             </div>
             
             {/* Tagline */}
