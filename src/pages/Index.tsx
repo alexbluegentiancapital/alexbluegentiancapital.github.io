@@ -86,7 +86,7 @@ const Index = () => {
             
             {/* Tagline */}
             <p
-              className="text-sm font-light uppercase tracking-[0.2em] text-frost animate-glow-pulse sm:text-base sm:tracking-[0.3em] md:text-xl md:tracking-[0.4em]"
+              className="tagline-glow text-sm font-light uppercase tracking-[0.2em] text-frost sm:text-base sm:tracking-[0.3em] md:text-xl md:tracking-[0.4em]"
             >
               forged in the cold
             </p>
@@ -192,22 +192,41 @@ const Index = () => {
             News
           </h2>
           <div className="space-y-3 sm:space-y-4">
-            <a
-              href="https://www.theglobeandmail.com/business/economy/article-dominion-dynamics-arctic-sensor-nodes-seed-funding/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-3 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-4 md:p-6"
-            >
-              <span className="mb-1 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:mb-2 sm:px-3 sm:py-1 sm:text-xs">
-                The Globe and Mail
-              </span>
-              <h3 className="mb-1 text-base font-semibold text-foreground transition-colors group-hover:text-frost sm:mb-2 sm:text-lg md:text-xl">
-                Dominion Dynamics, vying to become Canadian defence 'neoprime,' raises $21-million led by Georgian
-              </h3>
-              <p className="text-xs text-muted-foreground sm:text-sm">
-                Portfolio company Dominion Dynamics secures seed funding to advance Arctic sensor node technology for Canadian defence.
-              </p>
-            </a>
+            {[
+              {
+                source: 'The Globe and Mail',
+                href: 'https://www.theglobeandmail.com/business/economy/article-dominion-dynamics-arctic-sensor-nodes-seed-funding/',
+                title:
+                  "Dominion Dynamics, vying to become Canadian defence 'neoprime,' raises $21-million led by Georgian",
+                description:
+                  'Portfolio company Dominion Dynamics secures seed funding to advance Arctic sensor node technology for Canadian defence.',
+              },
+              {
+                source: 'GlobeNewswire',
+                href:
+                  'https://www.theglobeandmail.com/investing/markets/markets-news/GlobeNewswire/37242456/bdc-steps-up-its-defence-sector-footprint-with-investments-in-semiconductors-and-space-tech-and-a-new-strategic-partnership/',
+                title:
+                  'BDC steps up its defence sector footprint with investments in semiconductors and space tech and a new strategic partnership',
+                description:
+                  'Sector update on defence-related investments spanning semiconductors and space technology, plus a new strategic partnership.',
+              },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-3 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-4 md:p-6"
+              >
+                <span className="mb-1 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:mb-2 sm:px-3 sm:py-1 sm:text-xs">
+                  {item.source}
+                </span>
+                <h3 className="mb-1 text-base font-semibold text-foreground transition-colors group-hover:text-frost sm:mb-2 sm:text-lg md:text-xl">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-muted-foreground sm:text-sm">{item.description}</p>
+              </a>
+            ))}
           </div>
         </div>
       </section>
