@@ -90,7 +90,7 @@ const Index = () => {
               style={{
                 animation: 'tagline-glow 3s ease-in-out infinite',
                 textShadow:
-                  '0 0 10px hsl(195 100% 70% / 0.9), 0 0 30px hsl(195 100% 70% / 0.6), 0 0 60px hsl(195 100% 70% / 0.4), 0 0 100px hsl(195 100% 50% / 0.3)',
+                  '0 0 5px hsl(195 100% 70% / 1), 0 0 15px hsl(195 100% 70% / 1), 0 0 40px hsl(195 100% 70% / 0.8), 0 0 80px hsl(195 100% 70% / 0.6), 0 0 120px hsl(195 100% 50% / 0.5)',
               }}
             >
               forged in the cold
