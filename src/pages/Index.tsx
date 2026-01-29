@@ -87,6 +87,11 @@ const Index = () => {
             {/* Tagline */}
             <p
               className="tagline-glow text-sm font-light uppercase tracking-[0.2em] text-frost sm:text-base sm:tracking-[0.3em] md:text-xl md:tracking-[0.4em]"
+              style={{
+                animation: 'tagline-glow 3s ease-in-out infinite',
+                textShadow:
+                  '0 0 14px hsl(var(--frost) / 0.45), 0 0 32px hsl(var(--frost) / 0.25), 0 0 64px hsl(var(--primary) / 0.18)',
+              }}
             >
               forged in the cold
             </p>
