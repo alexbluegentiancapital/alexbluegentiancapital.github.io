@@ -207,7 +207,7 @@ const Index = () => {
                   'Portfolio company Dominion Dynamics secures seed funding to advance Arctic sensor node technology for Canadian defence.',
               },
               {
-                source: 'GlobeNewswire',
+                source: 'The Globe and Mail',
                 href:
                   'https://www.theglobeandmail.com/investing/markets/markets-news/GlobeNewswire/37242456/bdc-steps-up-its-defence-sector-footprint-with-investments-in-semiconductors-and-space-tech-and-a-new-strategic-partnership/',
                 title:
