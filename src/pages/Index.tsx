@@ -227,10 +227,10 @@ const Index = () => {
               >
                 <div className="mb-1 flex flex-wrap gap-2 sm:mb-2">
                   <span className="inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
-                    {item.source}
+                    {item.company}
                   </span>
                   <span className="inline-block rounded-full border border-frost/30 bg-frost/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
-                    {item.company}
+                    {item.source}
                   </span>
                 </div>
                 <h3 className="mb-1 text-base font-semibold text-foreground transition-colors group-hover:text-frost sm:mb-2 sm:text-lg md:text-xl">
