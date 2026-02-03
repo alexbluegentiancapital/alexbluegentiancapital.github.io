@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FROSTBITE RAMPAGE - Frozen Mountain Fury</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bangers&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(100, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(150, 100, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.15) 2px,
+                rgba(0, 0, 0, 0.15) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .game-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-family: 'Bangers', cursive;
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 
+                0 0 10px #0ff,
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                4px 4px 0 #1a1a3a,
+                -2px -2px 0 #5af;
+            letter-spacing: 4px;
+            animation: titlePulse 2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .title-icon {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 10px #0ff) drop-shadow(0 0 20px #0ff);
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        .title-icon-large {
+            width: 60px;
+            height: 60px;
+            filter: drop-shadow(0 0 15px #0ff) drop-shadow(0 0 30px #0ff);
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            width: 900px;
+            padding: 10px 20px;
+            background: linear-gradient(180deg, #2a2a4a, #1a1a3a);
+            border: 3px solid #5af;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 
+                0 0 20px rgba(100, 200, 255, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hud-section {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .hud-label {
+            font-size: 8px;
+            color: #8af;
+            text-transform: uppercase;
+        }
+
+        .hud-value {
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .health-bar {
+            width: 200px;
+            height: 20px;
+            background: #1a1a2a;
+            border: 2px solid #5af;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(180deg, #4f8, #2a6);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #4f8;
+        }
+
+        .health-fill.low {
+            background: linear-gradient(180deg, #f84, #a42);
+            box-shadow: 0 0 10px #f84;
+            animation: healthPulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes healthPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .weapon-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weapon-icon {
+            font-size: 24px;
+        }
+
+        .ammo-bar {
+            width: 100px;
+            height: 10px;
+            background: #1a1a2a;
+            border: 2px solid #fa5;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .ammo-fill {
+            height: 100%;
+            background: linear-gradient(180deg, #fa5, #f80);
+            transition: width 0.1s ease;
+        }
+
+        canvas {
+            border: 3px solid #5af;
+            border-top: none;
+            box-shadow: 
+                0 0 30px rgba(100, 200, 255, 0.4),
+                inset 0 0 50px rgba(0, 0, 0, 0.3);
+            image-rendering: pixelated;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            width: 900px;
+            padding: 15px 20px;
+            background: linear-gradient(180deg, #1a1a3a, #2a2a4a);
+            border: 3px solid #5af;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
+            padding: 0 8px;
+            background: linear-gradient(180deg, #4a4a6a, #3a3a5a);
+            border: 2px solid #8af;
+            border-radius: 5px;
+            font-size: 10px;
+            color: #fff;
+            box-shadow: 0 3px 0 #2a2a4a;
+        }
+
+        .control-label {
+            font-size: 8px;
+            color: #8af;
+        }
+
+        .game-over-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .game-over-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .game-over-text {
+            font-family: 'Bangers', cursive;
+            font-size: 72px;
+            color: #f55;
+            text-shadow: 
+                0 0 20px #f00,
+                0 0 40px #f00,
+                4px 4px 0 #500;
+            animation: gameOverPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes gameOverPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .final-score {
+            font-size: 24px;
+            color: #fff;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .restart-btn {
+            padding: 15px 40px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            color: #fff;
+            background: linear-gradient(180deg, #5af, #38c);
+            border: 3px solid #8cf;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #25a;
+            transition: all 0.1s ease;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #25a;
+        }
+
+        .restart-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #25a;
+        }
+
+        .tip-bubble {
+            background: linear-gradient(180deg, rgba(50, 80, 120, 0.95), rgba(30, 50, 80, 0.95));
+            border: 3px solid #5af;
+            border-radius: 15px;
+            padding: 15px 25px;
+            max-width: 400px;
+            text-align: center;
+            font-size: 11px;
+            color: #cdf;
+            line-height: 1.6;
+            box-shadow: 
+                0 0 20px rgba(100, 200, 255, 0.3),
+                inset 0 0 15px rgba(0, 0, 0, 0.3);
+            animation: tipPulse 2s ease-in-out infinite;
+        }
+
+        .tip-label {
+            color: #ff0;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0;
+        }
+
+        @keyframes tipPulse {
+            0%, 100% { border-color: #5af; box-shadow: 0 0 20px rgba(100, 200, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.3); }
+            50% { border-color: #8cf; box-shadow: 0 0 30px rgba(100, 200, 255, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.3); }
+        }
+
+        .start-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            z-index: 100;
+        }
+
+        .start-overlay.hidden {
+            display: none;
+        }
+
+        .start-title {
+            font-family: 'Bangers', cursive;
+            font-size: 64px;
+            color: #fff;
+            text-shadow: 
+                0 0 20px #0ff,
+                0 0 40px #0ff,
+                4px 4px 0 #1a1a3a;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #8af;
+            text-align: center;
+            line-height: 2;
+        }
+
+        .start-btn {
+            padding: 20px 60px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            color: #000;
+            background: linear-gradient(180deg, #ff0, #fa0);
+            border: 4px solid #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #a60;
+            animation: startPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes startPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 6px 0 #a60; }
+            50% { transform: scale(1.05); box-shadow: 0 8px 0 #a60; }
+        }
+
+        .start-btn:hover {
+            background: linear-gradient(180deg, #fff, #ff0);
+        }
+
+        .weapon-unlock {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            background: linear-gradient(180deg, rgba(100, 50, 200, 0.95), rgba(50, 25, 100, 0.95));
+            border: 4px solid #f0f;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 50;
+            animation: unlockPop 0.5s ease-out;
+            box-shadow: 0 0 50px #f0f;
+        }
+
+        @keyframes unlockPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .unlock-text {
+            font-size: 12px;
+            color: #ff0;
+            text-shadow: 0 0 10px #ff0;
+            margin-bottom: 10px;
+        }
+
+        .unlock-weapon {
+            font-family: 'Bangers', cursive;
+            font-size: 36px;
+            color: #fff;
+            text-shadow: 0 0 20px #f0f;
+        }
+
+        .combo-display {
+            position: absolute;
+            font-family: 'Bangers', cursive;
+            font-size: 48px;
+            color: #ff0;
+            text-shadow: 
+                0 0 10px #f80,
+                3px 3px 0 #a40;
+            pointer-events: none;
+            animation: comboFloat 1s ease-out forwards;
+        }
+
+        @keyframes comboFloat {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <div class="game-container">
+        <div class="title-bar">
+            <div class="title">FROSTBITE RAMPAGE</div>
+        </div>
+        
+        <div class="hud">
+            <div class="hud-section">
+                <div class="hud-label">Health</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="healthFill"></div>
+                </div>
+            </div>
+            
+            <div class="hud-section">
+                <div class="hud-label">Score</div>
+                <div class="hud-value" id="scoreDisplay">0</div>
+            </div>
+            
+            <div class="hud-section">
+                <div class="hud-label">Kills</div>
+                <div class="hud-value" id="killsDisplay">0</div>
+            </div>
+            
+            <div class="hud-section">
+                <div class="hud-label">Weapon</div>
+                <div class="weapon-display">
+                    <span class="weapon-icon" id="weaponIcon">👊</span>
+                    <span class="hud-value" id="weaponName">FISTS</span>
+                </div>
+            </div>
+            
+            <div class="hud-section" id="ammoSection" style="display: none;">
+                <div class="hud-label">Ammo</div>
+                <div class="ammo-bar">
+                    <div class="ammo-fill" id="ammoFill"></div>
+                </div>
+            </div>
+            
+            <div class="hud-section" id="shieldSection" style="display: none;">
+                <div class="hud-label">❄️ Shield</div>
+                <div class="ammo-bar" style="border-color: #6bf;">
+                    <div class="ammo-fill" id="shieldFill" style="background: linear-gradient(180deg, #6bf, #4facfe);"></div>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas" width="900" height="500"></canvas>
+        
+        <div class="controls-bar">
+            <div class="control-item">
+                <span class="key">←</span>
+                <span class="key">→</span>
+                <span class="control-label">Move</span>
+            </div>
+            <div class="control-item">
+                <span class="key">↑</span>
+                <span class="control-label">Jump</span>
+            </div>
+            <div class="control-item">
+                <span class="key">↓</span>
+                <span class="control-label">Crouch/Block</span>
+            </div>
+            <div class="control-item">
+                <span class="key">SPACE</span>
+                <span class="control-label">Attack</span>
+            </div>
+            <div class="control-item">
+                <span class="key">E</span>
+                <span class="control-label">Melee</span>
+            </div>
+        </div>
+        
+        <div class="start-overlay" id="startOverlay">
+            <div class="start-title">FROSTBITE RAMPAGE</div>
+            <div class="subtitle">
+                Battle endless waves of evil snowmen!<br>
+                Unlock powerful weapons as you progress!<br><br>
+                🪵 STICK → 🪓 AXE → ⚔️ SWORD → 🔫 GUN+SWORD → 🚀 ROCKET+SWORD → 🔥 FLAME+SWORD<br>
+                <span style="font-size: 10px; color: #f88;">Harder enemies at 100 & 200 kills!</span>
+            </div>
+            <button class="start-btn" id="startBtn">INSERT COIN</button>
+        </div>
+        
+        <div class="game-over-overlay" id="gameOverOverlay">
+            <div class="game-over-text">GAME OVER</div>
+            <div class="final-score" id="finalScore">Final Score: 0</div>
+            <div class="tip-bubble" id="tipBubble">
+                <span class="tip-label">💡 TIP:</span> Use "E" to do a melee attack when you have a ranged weapon
+            </div>
+            <button class="restart-btn" id="restartBtn">CONTINUE?</button>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            switch(type) {
+                case 'punch':
+                    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    oscillator.type = 'square';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.1);
+                    break;
+                case 'axe':
+                    oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                    oscillator.type = 'sawtooth';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.2);
+                    break;
+                case 'sword':
+                    oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    oscillator.type = 'triangle';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                    break;
+                case 'gunshot':
+                    oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
+                    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    oscillator.type = 'square';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.05);
+                    break;
+                case 'hit':
+                    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.08);
+                    gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                    oscillator.type = 'square';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.08);
+                    break;
+                case 'death':
+                    oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    oscillator.type = 'sawtooth';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.3);
+                    break;
+                case 'unlock':
+                    const osc1 = audioCtx.createOscillator();
+                    const gain1 = audioCtx.createGain();
+                    osc1.connect(gain1);
+                    gain1.connect(audioCtx.destination);
+                    osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    osc1.frequency.setValueAtTime(550, audioCtx.currentTime + 0.1);
+                    osc1.frequency.setValueAtTime(660, audioCtx.currentTime + 0.2);
+                    osc1.frequency.setValueAtTime(880, audioCtx.currentTime + 0.3);
+                    gain1.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                    osc1.type = 'square';
+                    osc1.start();
+                    osc1.stop(audioCtx.currentTime + 0.5);
+                    return;
+                case 'jump':
+                    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    oscillator.type = 'sine';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.1);
+                    break;
+                case 'damage':
+                    oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    oscillator.type = 'sawtooth';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                    break;
+                case 'rocket':
+                    oscillator.frequency.setValueAtTime(100, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.1);
+                    oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                    gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    oscillator.type = 'sawtooth';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.3);
+                    break;
+                case 'explosion':
+                    oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
+                    gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    oscillator.type = 'square';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.4);
+                    break;
+                case 'flame':
+                    oscillator.frequency.setValueAtTime(80, audioCtx.currentTime);
+                    oscillator.frequency.setValueAtTime(120, audioCtx.currentTime + 0.05);
+                    oscillator.frequency.setValueAtTime(60, audioCtx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    oscillator.type = 'sawtooth';
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                    break;
+            }
+        }
+
+        // Game Canvas Setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game State
+        let gameRunning = false;
+        let score = 0;
+        let kills = 0;
+        let screenShake = 0;
+        let particles = [];
+        let bullets = [];
+        let snowballs = [];
+        let floatingTexts = [];
+        let comboCount = 0;
+        let comboTimer = 0;
+        let weaponUnlockDisplay = null;
+        let powerups = [];
+        let snowballShieldTimer = 0;
+
+        // Weapon definitions
+        const WEAPONS = {
+            FISTS: { name: 'STICK', icon: '🪵', unlockKills: 0, damage: 10, range: 60, speed: 8, sound: 'punch' },
+            AXE: { name: 'AXE', icon: '🪓', unlockKills: 20, damage: 25, range: 80, speed: 15, sound: 'axe' },
+            SWORD: { name: 'SWORD', icon: '⚔️', unlockKills: 50, damage: 18, range: 100, speed: 10, sound: 'sword' },
+            GUN: { name: 'MACHINE GUN', icon: '🔫', unlockKills: 100, damage: 8, range: 800, speed: 5, sound: 'gunshot' },
+            ROCKET: { name: 'ROCKET LAUNCHER', icon: '🚀', unlockKills: 200, damage: 50, range: 800, speed: 30, sound: 'rocket' },
+            FLAMETHROWER: { name: 'FLAMETHROWER', icon: '🔥', unlockKills: 300, damage: 3, range: 200, speed: 2, sound: 'flame' }
+        };
+        
+        // Enemy tier definitions
+        const ENEMY_TIERS = {
+            NORMAL: { healthMult: 1, damageMult: 1, speedMult: 1, color: '#f0f8ff' },
+            HARD: { healthMult: 2, damageMult: 1.5, speedMult: 1.3, color: '#c0d8ff' },
+            BRUTAL: { healthMult: 3, damageMult: 2, speedMult: 1.5, color: '#a0b8e0' }
+        };
+
+        // Yeti Player
+        const yeti = {
+            x: 450,
+            y: 350,
+            width: 60,
+            height: 80,
+            velocityX: 0,
+            velocityY: 0,
+            speed: 5,
+            jumpForce: -15,
+            health: 100,
+            maxHealth: 100,
+            facing: 1,
+            isJumping: false,
+            isCrouching: false,
+            isAttacking: false,
+            isMeleeAttacking: false,
+            attackFrame: 0,
+            meleeAttackFrame: 0,
+            attackCooldown: 0,
+            meleeCooldown: 0,
+            weapon: WEAPONS.FISTS,
+            secondaryWeapon: null,
+            ammo: 50,
+            maxAmmo: 50,
+            rockets: 5,
+            maxRockets: 5,
+            fuel: 100,
+            maxFuel: 100,
+            reloadTimer: 0,
+            invincible: 0,
+            comboChain: 0,
+            lastComboTime: 0
+        };
+        
+        let rockets = [];
+        let flames = [];
+
+        // Snowman enemies
+        let snowmen = [];
+
+        // Input state
+        const keys = {
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+            space: false,
+            melee: false
+        };
+
+        // Background elements
+        const mountains = [];
+        const snowflakes = [];
+        
+        function initBackground() {
+            // Create mountain layers
+            for (let i = 0; i < 3; i++) {
+                mountains.push({
+                    peaks: [],
+                    color: `rgba(${60 + i * 30}, ${80 + i * 30}, ${120 + i * 20}, ${0.3 + i * 0.2})`,
+                    speed: 0.1 + i * 0.1,
+                    offset: 0
+                });
+                
+                for (let j = 0; j < 8; j++) {
+                    mountains[i].peaks.push({
+                        x: j * 150 - 50,
+                        height: 100 + Math.random() * 150 - i * 30
+                    });
+                }
+            }
+            
+            // Create snowflakes
+            for (let i = 0; i < 100; i++) {
+                snowflakes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speed: Math.random() * 2 + 1,
+                    drift: Math.random() * 2 - 1
+                });
+            }
+        }
+
+        function drawBackground() {
+            // Sky gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#1a2a4a');
+            gradient.addColorStop(0.5, '#2a3a5a');
+            gradient.addColorStop(1, '#3a4a6a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Aurora effect
+            ctx.save();
+            ctx.globalAlpha = 0.3;
+            for (let i = 0; i < 3; i++) {
+                const hue = (Date.now() / 50 + i * 60) % 360;
+                ctx.fillStyle = `hsla(${hue}, 70%, 50%, 0.1)`;
+                ctx.beginPath();
+                ctx.ellipse(
+                    450 + Math.sin(Date.now() / 2000 + i) * 100,
+                    50 + i * 20,
+                    200 + Math.sin(Date.now() / 1500) * 50,
+                    30,
+                    0, 0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+            ctx.restore();
+            
+            // Mountains
+            mountains.forEach((layer, index) => {
+                ctx.fillStyle = layer.color;
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height);
+                
+                layer.peaks.forEach((peak, i) => {
+                    const x = (peak.x + layer.offset) % (canvas.width + 200) - 100;
+                    ctx.lineTo(x, canvas.height - 200 - peak.height + index * 50);
+                    if (i < layer.peaks.length - 1) {
+                        const nextX = (layer.peaks[i + 1].x + layer.offset) % (canvas.width + 200) - 100;
+                        ctx.lineTo((x + nextX) / 2, canvas.height - 180 - (peak.height + layer.peaks[i + 1].height) / 3 + index * 50);
+                    }
+                });
+                
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+            });
+            
+            // Ground
+            const groundGradient = ctx.createLinearGradient(0, 400, 0, canvas.height);
+            groundGradient.addColorStop(0, '#e8f0ff');
+            groundGradient.addColorStop(0.3, '#d0e0f0');
+            groundGradient.addColorStop(1, '#a0c0d0');
+            ctx.fillStyle = groundGradient;
+            ctx.fillRect(0, 420, canvas.width, 80);
+            
+            // Ice patches
+            ctx.fillStyle = 'rgba(200, 230, 255, 0.5)';
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.ellipse(100 + i * 200, 450, 50 + Math.sin(Date.now() / 1000 + i) * 5, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Snowflakes
+            ctx.fillStyle = '#fff';
+            snowflakes.forEach(flake => {
+                ctx.globalAlpha = 0.5 + flake.size / 6;
+                ctx.beginPath();
+                ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Update position
+                flake.y += flake.speed;
+                flake.x += flake.drift + Math.sin(Date.now() / 500 + flake.x) * 0.5;
+                
+                if (flake.y > canvas.height) {
+                    flake.y = -5;
+                    flake.x = Math.random() * canvas.width;
+                }
+                if (flake.x > canvas.width) flake.x = 0;
+                if (flake.x < 0) flake.x = canvas.width;
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function drawYeti() {
+            ctx.save();
+            
+            // Flash when invincible
+            if (yeti.invincible > 0 && Math.floor(yeti.invincible / 5) % 2 === 0) {
+                ctx.globalAlpha = 0.5;
+            }
+            
+            const x = yeti.x;
+            const y = yeti.isCrouching ? yeti.y + 20 : yeti.y;
+            const height = yeti.isCrouching ? yeti.height - 20 : yeti.height;
+            
+            ctx.translate(x + yeti.width / 2, y + height / 2);
+            ctx.scale(yeti.facing, 1);
+            ctx.translate(-(x + yeti.width / 2), -(y + height / 2));
+            
+            // Snowball shield aura
+            if (snowballShieldTimer > 0) {
+                ctx.fillStyle = `rgba(100, 200, 255, ${0.2 + Math.sin(Date.now() / 100) * 0.1})`;
+                ctx.beginPath();
+                ctx.arc(x + yeti.width / 2, y + height / 2, 60 + Math.sin(Date.now() / 150) * 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = `rgba(150, 220, 255, ${0.6 + Math.sin(Date.now() / 80) * 0.3})`;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+            
+            // Main body - muscular blue torso
+            ctx.fillStyle = '#6BA3BE';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width / 2, y + height * 0.55, yeti.width * 0.5, height * 0.4, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Chest fur - white fluffy area
+            ctx.fillStyle = '#E8F4F8';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width / 2, y + height * 0.5, yeti.width * 0.35, height * 0.28, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Chest fur texture - jagged edges
+            ctx.fillStyle = '#E8F4F8';
+            for (let i = 0; i < 7; i++) {
+                const angle = -0.8 + i * 0.3;
+                const furX = x + yeti.width / 2 + Math.cos(angle) * yeti.width * 0.32;
+                const furY = y + height * 0.5 + Math.sin(angle) * height * 0.25;
+                ctx.beginPath();
+                ctx.moveTo(furX, furY);
+                ctx.lineTo(furX + Math.cos(angle) * 8, furY + Math.sin(angle) * 12);
+                ctx.lineTo(furX + Math.cos(angle + 0.3) * 5, furY + Math.sin(angle) * 8);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // Head - rounder, more gorilla-like
+            ctx.fillStyle = '#6BA3BE';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width / 2, y + height * 0.18, yeti.width * 0.42, height * 0.22, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Snow particles on head
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(x + yeti.width * 0.3, y + height * 0.05, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + yeti.width * 0.6, y + height * 0.03, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + yeti.width * 0.75, y + height * 0.08, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Brow ridge - angry look
+            ctx.fillStyle = '#5A8FA8';
+            ctx.beginPath();
+            ctx.moveTo(x + yeti.width * 0.2, y + height * 0.12);
+            ctx.quadraticCurveTo(x + yeti.width * 0.5, y + height * 0.08, x + yeti.width * 0.8, y + height * 0.12);
+            ctx.quadraticCurveTo(x + yeti.width * 0.5, y + height * 0.15, x + yeti.width * 0.2, y + height * 0.12);
+            ctx.fill();
+            
+            // Eyes - angry, determined look
+            ctx.fillStyle = '#1a2a3a';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.35, y + height * 0.16, 5, 6, -0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.65, y + height * 0.16, 5, 6, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Eye shine
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(x + yeti.width * 0.37, y + height * 0.14, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + yeti.width * 0.67, y + height * 0.14, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Nose/snout area
+            ctx.fillStyle = '#5A8FA8';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.5, y + height * 0.24, 12, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Nostrils
+            ctx.fillStyle = '#3a5a6a';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.45, y + height * 0.24, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.55, y + height * 0.24, 3, 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Mouth - determined grimace (no smile)
+            if (yeti.isAttacking) {
+                ctx.fillStyle = '#2a3a4a';
+                ctx.beginPath();
+                ctx.ellipse(x + yeti.width * 0.5, y + height * 0.32, 10, 7, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // Teeth
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(x + yeti.width * 0.42, y + height * 0.29, 4, 5);
+                ctx.fillRect(x + yeti.width * 0.54, y + height * 0.29, 4, 5);
+            } else {
+                // Neutral/stern mouth line
+                ctx.strokeStyle = '#3a4a5a';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(x + yeti.width * 0.40, y + height * 0.31);
+                ctx.lineTo(x + yeti.width * 0.60, y + height * 0.31);
+                ctx.stroke();
+            }
+            
+            // Left arm (back arm) - muscular
+            const armY = y + height * 0.45;
+            ctx.fillStyle = '#6BA3BE';
+            ctx.strokeStyle = '#5A8FA8';
+            ctx.lineWidth = 16;
+            ctx.lineCap = 'round';
+            
+            // Back arm hanging
+            ctx.beginPath();
+            ctx.moveTo(x + yeti.width * 0.15, armY);
+            ctx.lineTo(x - 5, armY + 25);
+            ctx.stroke();
+            
+            // Back hand/fist
+            ctx.fillStyle = '#6BA3BE';
+            ctx.beginPath();
+            ctx.arc(x - 5, armY + 30, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Right arm (front arm) with weapon
+            const frontArmX = x + yeti.width * 0.85;
+            let armEndX, armEndY, armAngle;
+            
+            if (yeti.isAttacking) {
+                const progress = yeti.attackFrame / (yeti.weapon === WEAPONS.GUN ? 3 : 8);
+                
+                if (yeti.weapon === WEAPONS.FISTS) {
+                    armAngle = -0.3 + progress * 0.8;
+                    armEndX = frontArmX + Math.cos(armAngle) * 35;
+                    armEndY = armY + Math.sin(armAngle) * 35;
+                } else if (yeti.weapon === WEAPONS.AXE) {
+                    armAngle = -1.5 + progress * 2.5;
+                    armEndX = frontArmX + Math.cos(armAngle) * 40;
+                    armEndY = armY + Math.sin(armAngle) * 40;
+                } else if (yeti.weapon === WEAPONS.SWORD) {
+                    if (yeti.isCrouching) {
+                        armAngle = 0.5 - progress * 0.8;
+                    } else if (yeti.isJumping) {
+                        armAngle = -1 + progress * 1.5;
+                    } else {
+                        armAngle = -0.2 + progress * 0.4;
+                    }
+                    armEndX = frontArmX + Math.cos(armAngle) * 38;
+                    armEndY = armY + Math.sin(armAngle) * 38;
+                } else if (yeti.weapon === WEAPONS.GUN) {
+                    armAngle = 0;
+                    armEndX = frontArmX + 35;
+                    armEndY = armY - 5 + Math.sin(Date.now() / 50) * 2;
+                }
+            } else {
+                armAngle = 0.4;
+                armEndX = frontArmX + 20;
+                armEndY = armY + 15;
+            }
+            
+            // Front arm
+            ctx.lineWidth = 14;
+            ctx.strokeStyle = '#6BA3BE';
+            ctx.beginPath();
+            ctx.moveTo(x + yeti.width * 0.75, armY);
+            ctx.lineTo(armEndX, armEndY);
+            ctx.stroke();
+            
+            // Draw weapon or fist
+            if (yeti.weapon === WEAPONS.FISTS) {
+                // Holding a wooden stick/club like in the image
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.moveTo(armEndX, armEndY);
+                const stickEndX = armEndX + Math.cos(armAngle - 0.3) * 45;
+                const stickEndY = armEndY + Math.sin(armAngle - 0.3) * 45;
+                ctx.lineTo(stickEndX, stickEndY);
+                ctx.stroke();
+                
+                // Stick details - bark texture
+                ctx.strokeStyle = '#4E342E';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 3; i++) {
+                    const t = 0.3 + i * 0.25;
+                    const barkX = armEndX + (stickEndX - armEndX) * t;
+                    const barkY = armEndY + (stickEndY - armEndY) * t;
+                    ctx.beginPath();
+                    ctx.arc(barkX, barkY, 4, 0, Math.PI);
+                    ctx.stroke();
+                }
+                
+                // Hand gripping
+                ctx.fillStyle = '#6BA3BE';
+                ctx.beginPath();
+                ctx.arc(armEndX, armEndY, 9, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (yeti.weapon === WEAPONS.AXE) {
+                // Axe handle
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 7;
+                ctx.beginPath();
+                ctx.moveTo(armEndX, armEndY);
+                const handleEndX = armEndX + Math.cos(armAngle) * 45;
+                const handleEndY = armEndY + Math.sin(armAngle) * 45;
+                ctx.lineTo(handleEndX, handleEndY);
+                ctx.stroke();
+                
+                // Axe head - larger, more brutal
+                ctx.fillStyle = '#607D8B';
+                ctx.beginPath();
+                ctx.moveTo(handleEndX, handleEndY);
+                ctx.lineTo(handleEndX + Math.cos(armAngle + 0.6) * 28, handleEndY + Math.sin(armAngle + 0.6) * 28);
+                ctx.lineTo(handleEndX + Math.cos(armAngle) * 40, handleEndY + Math.sin(armAngle) * 40);
+                ctx.lineTo(handleEndX + Math.cos(armAngle - 0.6) * 28, handleEndY + Math.sin(armAngle - 0.6) * 28);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#455A64';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Hand
+                ctx.fillStyle = '#6BA3BE';
+                ctx.beginPath();
+                ctx.arc(armEndX, armEndY, 9, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (yeti.weapon === WEAPONS.SWORD) {
+                // Sword handle
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.moveTo(armEndX, armEndY);
+                const guardX = armEndX + Math.cos(armAngle) * 15;
+                const guardY = armEndY + Math.sin(armAngle) * 15;
+                ctx.lineTo(guardX, guardY);
+                ctx.stroke();
+                
+                // Guard
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(guardX + Math.cos(armAngle + Math.PI/2) * 12, guardY + Math.sin(armAngle + Math.PI/2) * 12);
+                ctx.lineTo(guardX + Math.cos(armAngle - Math.PI/2) * 12, guardY + Math.sin(armAngle - Math.PI/2) * 12);
+                ctx.stroke();
+                
+                // Blade
+                ctx.fillStyle = '#B0BEC5';
+                ctx.beginPath();
+                const bladeLength = 65;
+                const bladeWidth = 7;
+                const tipX = guardX + Math.cos(armAngle) * bladeLength;
+                const tipY = guardY + Math.sin(armAngle) * bladeLength;
+                ctx.moveTo(guardX + Math.cos(armAngle + Math.PI/2) * bladeWidth, guardY + Math.sin(armAngle + Math.PI/2) * bladeWidth);
+                ctx.lineTo(tipX, tipY);
+                ctx.lineTo(guardX + Math.cos(armAngle - Math.PI/2) * bladeWidth, guardY + Math.sin(armAngle - Math.PI/2) * bladeWidth);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Blade shine
+                ctx.strokeStyle = '#ECEFF1';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(guardX + Math.cos(armAngle) * 5, guardY + Math.sin(armAngle) * 5);
+                ctx.lineTo(guardX + Math.cos(armAngle) * bladeLength * 0.85, guardY + Math.sin(armAngle) * bladeLength * 0.85);
+                ctx.stroke();
+                
+                // Hand
+                ctx.fillStyle = '#6BA3BE';
+                ctx.beginPath();
+                ctx.arc(armEndX, armEndY, 9, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (yeti.weapon === WEAPONS.GUN) {
+                // Gun body
+                ctx.fillStyle = '#37474F';
+                ctx.fillRect(armEndX - 5, armEndY - 9, 55, 18);
+                
+                // Barrel
+                ctx.fillStyle = '#263238';
+                ctx.fillRect(armEndX + 50, armEndY - 5, 22, 10);
+                
+                // Stock
+                ctx.fillStyle = '#5D4037';
+                ctx.fillRect(armEndX - 22, armEndY - 7, 22, 14);
+                
+                // Details
+                ctx.fillStyle = '#546E7A';
+                ctx.fillRect(armEndX + 5, armEndY - 12, 18, 5);
+                
+                // Muzzle flash when firing
+                if (yeti.isAttacking && yeti.attackFrame < 3) {
+                    ctx.fillStyle = '#FF6F00';
+                    ctx.beginPath();
+                    ctx.moveTo(armEndX + 72, armEndY);
+                    ctx.lineTo(armEndX + 95, armEndY - 10);
+                    ctx.lineTo(armEndX + 88, armEndY);
+                    ctx.lineTo(armEndX + 95, armEndY + 10);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    ctx.fillStyle = '#FFFF00';
+                    ctx.beginPath();
+                    ctx.arc(armEndX + 75, armEndY, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Hand
+                ctx.fillStyle = '#6BA3BE';
+                ctx.beginPath();
+                ctx.arc(armEndX, armEndY, 9, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (yeti.weapon === WEAPONS.ROCKET) {
+                // Rocket launcher tube
+                ctx.fillStyle = '#2E7D32';
+                ctx.beginPath();
+                ctx.roundRect(armEndX - 10, armEndY - 12, 70, 24, 5);
+                ctx.fill();
+                
+                // Launcher opening
+                ctx.fillStyle = '#1B5E20';
+                ctx.beginPath();
+                ctx.ellipse(armEndX + 60, armEndY, 12, 12, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#111';
+                ctx.beginPath();
+                ctx.ellipse(armEndX + 60, armEndY, 8, 8, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Scope
+                ctx.fillStyle = '#455A64';
+                ctx.fillRect(armEndX + 10, armEndY - 18, 25, 8);
+                ctx.fillStyle = '#42A5F5';
+                ctx.beginPath();
+                ctx.arc(armEndX + 35, armEndY - 14, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Grip
+                ctx.fillStyle = '#5D4037';
+                ctx.fillRect(armEndX - 5, armEndY + 10, 15, 12);
+                
+                // Back exhaust
+                ctx.fillStyle = '#1B5E20';
+                ctx.beginPath();
+                ctx.ellipse(armEndX - 10, armEndY, 10, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Launch flash when firing
+                if (yeti.isAttacking && yeti.attackFrame < 4) {
+                    ctx.fillStyle = '#FF6F00';
+                    ctx.beginPath();
+                    ctx.arc(armEndX + 65, armEndY, 15 + Math.random() * 5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Back blast
+                    ctx.fillStyle = 'rgba(255, 150, 0, 0.5)';
+                    ctx.beginPath();
+                    ctx.moveTo(armEndX - 15, armEndY);
+                    ctx.lineTo(armEndX - 40 - Math.random() * 15, armEndY - 10);
+                    ctx.lineTo(armEndX - 40 - Math.random() * 15, armEndY + 10);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+                
+                // Hand
+                ctx.fillStyle = '#6BA3BE';
+                ctx.beginPath();
+                ctx.arc(armEndX, armEndY + 8, 9, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (yeti.weapon === WEAPONS.FLAMETHROWER) {
+                // Flamethrower tank on back
+                ctx.fillStyle = '#c41';
+                ctx.beginPath();
+                ctx.roundRect(x + yeti.width * 0.1, y + height * 0.35, 18, 35, 5);
+                ctx.fill();
+                ctx.strokeStyle = '#911';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Tank straps
+                ctx.strokeStyle = '#444';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(x + yeti.width * 0.2, y + height * 0.35);
+                ctx.lineTo(x + yeti.width * 0.4, y + height * 0.3);
+                ctx.stroke();
+                
+                // Flamethrower body/nozzle
+                ctx.fillStyle = '#333';
+                ctx.beginPath();
+                ctx.roundRect(armEndX - 8, armEndY - 8, 50, 16, 3);
+                ctx.fill();
+                
+                // Nozzle tip
+                ctx.fillStyle = '#222';
+                ctx.beginPath();
+                ctx.roundRect(armEndX + 42, armEndY - 10, 20, 20, 2);
+                ctx.fill();
+                
+                // Pilot light
+                ctx.fillStyle = '#48f';
+                ctx.beginPath();
+                ctx.arc(armEndX + 52, armEndY, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Hose from tank
+                ctx.strokeStyle = '#555';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(x + yeti.width * 0.2, y + height * 0.55);
+                ctx.quadraticCurveTo(x + yeti.width * 0.5, y + height * 0.6, armEndX, armEndY);
+                ctx.stroke();
+                
+                // Flame effect when firing
+                if (yeti.isAttacking && yeti.fuel > 0) {
+                    // Large flame burst
+                    const flameLength = 80 + Math.random() * 30;
+                    const gradient = ctx.createLinearGradient(armEndX + 60, armEndY, armEndX + 60 + flameLength, armEndY);
+                    gradient.addColorStop(0, '#ffff00');
+                    gradient.addColorStop(0.3, '#ff8800');
+                    gradient.addColorStop(0.7, '#ff4400');
+                    gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.moveTo(armEndX + 60, armEndY - 8);
+                    ctx.quadraticCurveTo(armEndX + 80, armEndY - 15 + Math.random() * 10, armEndX + 60 + flameLength, armEndY + (Math.random() - 0.5) * 20);
+                    ctx.quadraticCurveTo(armEndX + 80, armEndY + 15 + Math.random() * 10, armEndX + 60, armEndY + 8);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Inner bright flame
+                    ctx.fillStyle = '#fff';
+                    ctx.globalAlpha = 0.7;
+                    ctx.beginPath();
+                    ctx.ellipse(armEndX + 65, armEndY, 10, 5, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+                
+                // Hand
+                ctx.fillStyle = '#6BA3BE';
+                ctx.beginPath();
+                ctx.arc(armEndX, armEndY, 9, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw secondary sword on back (for gun/rocket users) or when melee attacking
+            if (yeti.secondaryWeapon) {
+                ctx.save();
+                
+                let swordAngle, swordX, swordY;
+                
+                if (yeti.isMeleeAttacking) {
+                    // Swing the sword
+                    const progress = yeti.meleeAttackFrame / 12;
+                    swordAngle = -1.2 + progress * 2.0;
+                    swordX = x + yeti.width * 0.2;
+                    swordY = y + height * 0.5;
+                } else {
+                    // Sword on back
+                    swordAngle = -2.5;
+                    swordX = x + yeti.width * 0.3;
+                    swordY = y + height * 0.4;
+                }
+                
+                // Sword handle
+                ctx.strokeStyle = '#5D4037';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                const backGuardX = swordX + Math.cos(swordAngle) * 12;
+                const backGuardY = swordY + Math.sin(swordAngle) * 12;
+                ctx.moveTo(swordX, swordY);
+                ctx.lineTo(backGuardX, backGuardY);
+                ctx.stroke();
+                
+                // Guard
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(backGuardX + Math.cos(swordAngle + Math.PI/2) * 8, backGuardY + Math.sin(swordAngle + Math.PI/2) * 8);
+                ctx.lineTo(backGuardX + Math.cos(swordAngle - Math.PI/2) * 8, backGuardY + Math.sin(swordAngle - Math.PI/2) * 8);
+                ctx.stroke();
+                
+                // Blade
+                ctx.fillStyle = '#B0BEC5';
+                ctx.beginPath();
+                const backBladeLen = 50;
+                const backTipX = backGuardX + Math.cos(swordAngle) * backBladeLen;
+                const backTipY = backGuardY + Math.sin(swordAngle) * backBladeLen;
+                ctx.moveTo(backGuardX + Math.cos(swordAngle + Math.PI/2) * 5, backGuardY + Math.sin(swordAngle + Math.PI/2) * 5);
+                ctx.lineTo(backTipX, backTipY);
+                ctx.lineTo(backGuardX + Math.cos(swordAngle - Math.PI/2) * 5, backGuardY + Math.sin(swordAngle - Math.PI/2) * 5);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Blade shine
+                ctx.strokeStyle = '#ECEFF1';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(backGuardX + Math.cos(swordAngle) * 4, backGuardY + Math.sin(swordAngle) * 4);
+                ctx.lineTo(backGuardX + Math.cos(swordAngle) * backBladeLen * 0.8, backGuardY + Math.sin(swordAngle) * backBladeLen * 0.8);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            // Legs - thick and powerful
+            ctx.fillStyle = '#6BA3BE';
+            ctx.strokeStyle = '#5A8FA8';
+            ctx.lineWidth = 18;
+            
+            const legOffset = Math.sin(Date.now() / 100) * (Math.abs(yeti.velocityX) > 0.5 ? 10 : 0);
+            
+            // Left leg
+            ctx.beginPath();
+            ctx.moveTo(x + yeti.width * 0.35, y + height * 0.75);
+            ctx.lineTo(x + yeti.width * 0.28 + legOffset, y + height);
+            ctx.stroke();
+            
+            // Right leg
+            ctx.beginPath();
+            ctx.moveTo(x + yeti.width * 0.65, y + height * 0.75);
+            ctx.lineTo(x + yeti.width * 0.72 - legOffset, y + height);
+            ctx.stroke();
+            
+            // Feet - large, powerful
+            ctx.fillStyle = '#6BA3BE';
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.28 + legOffset, y + height + 6, 14, 10, -0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x + yeti.width * 0.72 - legOffset, y + height + 6, 14, 10, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Toes
+            ctx.fillStyle = '#5A8FA8';
+            for (let foot = 0; foot < 2; foot++) {
+                const footX = foot === 0 ? x + yeti.width * 0.28 + legOffset : x + yeti.width * 0.72 - legOffset;
+                for (let toe = 0; toe < 3; toe++) {
+                    ctx.beginPath();
+                    ctx.arc(footX - 8 + toe * 8, y + height + 12, 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            // Snow dust at feet when moving
+            if (Math.abs(yeti.velocityX) > 2) {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.arc(
+                        x + yeti.width / 2 - yeti.facing * 20 + Math.random() * 20,
+                        y + height + 5 + Math.random() * 10,
+                        2 + Math.random() * 3,
+                        0, Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+            }
+            
+            ctx.restore();
+        }
+
+        function spawnSnowman() {
+            const side = Math.random() < 0.5 ? 'left' : 'right';
+            const difficultyMultiplier = 1 + kills / 50;
+            
+            // Determine enemy tier based on kills
+            let tier = ENEMY_TIERS.NORMAL;
+            if (kills >= 200) {
+                // After 200 kills, mix of all tiers with more brutal
+                const roll = Math.random();
+                if (roll < 0.4) tier = ENEMY_TIERS.BRUTAL;
+                else if (roll < 0.75) tier = ENEMY_TIERS.HARD;
+            } else if (kills >= 100) {
+                // After 100 kills, mix of normal and hard
+                const roll = Math.random();
+                if (roll < 0.5) tier = ENEMY_TIERS.HARD;
+            }
+            
+            const isElite = kills > 30 && Math.random() < 0.15;
+            const isRanged = Math.random() < 0.3;
+            
+            const baseHealth = isElite ? 60 : 30;
+            const baseSpeed = 1 + Math.random() * 1.5;
+            
+            const snowman = {
+                x: side === 'left' ? -50 : canvas.width + 50,
+                y: 350,
+                width: isElite ? 55 : 45,
+                height: isElite ? 75 : 65,
+                velocityX: 0,
+                health: baseHealth * tier.healthMult * Math.min(difficultyMultiplier, 2),
+                maxHealth: baseHealth * tier.healthMult * Math.min(difficultyMultiplier, 2),
+                speed: baseSpeed * tier.speedMult * Math.min(difficultyMultiplier, 2.5),
+                damage: tier.damageMult,
+                facing: side === 'left' ? 1 : -1,
+                isElite,
+                isRanged,
+                tier: tier,
+                attackCooldown: 0,
+                hitFlash: 0,
+                hasShield: isElite && Math.random() < 0.5,
+                shieldHealth: 20 * tier.healthMult
+            };
+            
+            snowmen.push(snowman);
+        }
+
+        function drawSnowman(snowman) {
+            ctx.save();
+            
+            const x = snowman.x;
+            const y = snowman.y;
+            
+            // Hit flash
+            if (snowman.hitFlash > 0) {
+                ctx.globalAlpha = 0.5 + Math.sin(snowman.hitFlash * 0.5) * 0.5;
+            }
+            
+            ctx.translate(x + snowman.width / 2, y + snowman.height / 2);
+            ctx.scale(snowman.facing, 1);
+            ctx.translate(-(x + snowman.width / 2), -(y + snowman.height / 2));
+            
+            // Evil aura for elites
+            if (snowman.isElite) {
+                ctx.fillStyle = 'rgba(200, 50, 50, 0.2)';
+                ctx.beginPath();
+                ctx.arc(x + snowman.width / 2, y + snowman.height / 2, snowman.width * 0.8 + Math.sin(Date.now() / 100) * 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Tier aura for hard/brutal enemies
+            if (snowman.tier === ENEMY_TIERS.HARD) {
+                ctx.fillStyle = 'rgba(100, 100, 200, 0.15)';
+                ctx.beginPath();
+                ctx.arc(x + snowman.width / 2, y + snowman.height / 2, snowman.width * 0.7, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (snowman.tier === ENEMY_TIERS.BRUTAL) {
+                ctx.fillStyle = 'rgba(150, 50, 200, 0.2)';
+                ctx.beginPath();
+                ctx.arc(x + snowman.width / 2, y + snowman.height / 2, snowman.width * 0.75 + Math.sin(Date.now() / 80) * 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Get snowman color based on tier
+            const snowColor = snowman.tier ? snowman.tier.color : '#f0f8ff';
+            
+            // Bottom ball
+            ctx.fillStyle = snowman.isElite ? '#e0e8f0' : snowColor;
+            ctx.beginPath();
+            ctx.ellipse(x + snowman.width / 2, y + snowman.height * 0.75, snowman.width / 2, snowman.height * 0.28, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#c0d0e0';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Middle ball
+            ctx.beginPath();
+            ctx.ellipse(x + snowman.width / 2, y + snowman.height * 0.45, snowman.width * 0.4, snowman.height * 0.22, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Head
+            ctx.beginPath();
+            ctx.ellipse(x + snowman.width / 2, y + snowman.height * 0.18, snowman.width * 0.35, snowman.height * 0.18, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Evil eyes
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.ellipse(x + snowman.width * 0.38, y + snowman.height * 0.14, 4, 5, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(x + snowman.width * 0.62, y + snowman.height * 0.14, 4, 5, 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Angry eyebrows
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(x + snowman.width * 0.28, y + snowman.height * 0.08);
+            ctx.lineTo(x + snowman.width * 0.45, y + snowman.height * 0.12);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x + snowman.width * 0.72, y + snowman.height * 0.08);
+            ctx.lineTo(x + snowman.width * 0.55, y + snowman.height * 0.12);
+            ctx.stroke();
+            
+            // Carrot nose
+            ctx.fillStyle = '#ff6600';
+            ctx.beginPath();
+            ctx.moveTo(x + snowman.width / 2, y + snowman.height * 0.18);
+            ctx.lineTo(x + snowman.width / 2 + 15, y + snowman.height * 0.2);
+            ctx.lineTo(x + snowman.width / 2, y + snowman.height * 0.22);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Evil grin
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(x + snowman.width / 2, y + snowman.height * 0.22, 8, 0.3, Math.PI - 0.3);
+            ctx.stroke();
+            
+            // Teeth
+            ctx.fillStyle = '#333';
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.arc(x + snowman.width * 0.4 + i * 5, y + snowman.height * 0.26, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Top hat for elites
+            if (snowman.isElite) {
+                ctx.fillStyle = '#1a1a2a';
+                ctx.fillRect(x + snowman.width * 0.25, y - 5, snowman.width * 0.5, 5);
+                ctx.fillRect(x + snowman.width * 0.3, y - 25, snowman.width * 0.4, 25);
+                ctx.fillStyle = '#8b0000';
+                ctx.fillRect(x + snowman.width * 0.3, y - 15, snowman.width * 0.4, 5);
+            }
+            
+            // Arms (stick arms)
+            ctx.strokeStyle = '#4a3020';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(x + snowman.width * 0.1, y + snowman.height * 0.4);
+            ctx.lineTo(x - 15, y + snowman.height * 0.35);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x + snowman.width * 0.9, y + snowman.height * 0.4);
+            ctx.lineTo(x + snowman.width + 15, y + snowman.height * 0.35);
+            ctx.stroke();
+            
+            // Shield for shielded elites
+            if (snowman.hasShield && snowman.shieldHealth > 0) {
+                ctx.fillStyle = `rgba(100, 150, 255, ${0.5 + Math.sin(Date.now() / 200) * 0.2})`;
+                ctx.strokeStyle = '#4080ff';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.ellipse(x + snowman.width + 10, y + snowman.height * 0.5, 15, 30, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            }
+            
+            // Buttons
+            ctx.fillStyle = '#333';
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(x + snowman.width / 2, y + snowman.height * 0.4 + i * 12, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Health bar for elites
+            if (snowman.isElite) {
+                const barWidth = snowman.width;
+                const healthPercent = snowman.health / snowman.maxHealth;
+                ctx.fillStyle = '#333';
+                ctx.fillRect(x, y - 15, barWidth, 6);
+                ctx.fillStyle = healthPercent > 0.3 ? '#4f8' : '#f44';
+                ctx.fillRect(x + 1, y - 14, (barWidth - 2) * healthPercent, 4);
+            }
+            
+            ctx.restore();
+        }
+
+        function updateSnowmen() {
+            const spawnRate = Math.max(60, 120 - kills);
+            if (Math.random() < 1 / spawnRate) {
+                spawnSnowman();
+            }
+            
+            snowmen.forEach((snowman, index) => {
+                // Move toward player
+                const direction = yeti.x > snowman.x ? 1 : -1;
+                snowman.facing = direction;
+                
+                const distToPlayer = Math.abs(yeti.x - snowman.x);
+                
+                if (snowman.isRanged && distToPlayer < 400 && distToPlayer > 150) {
+                    // Ranged snowmen throw snowballs
+                    if (snowman.attackCooldown <= 0) {
+                        throwSnowball(snowman);
+                        snowman.attackCooldown = 90;
+                    }
+                } else if (distToPlayer > 50) {
+                    snowman.velocityX = direction * snowman.speed;
+                } else {
+                    snowman.velocityX = 0;
+                    // Melee attack
+                    if (snowman.attackCooldown <= 0 && yeti.invincible <= 0 && !yeti.isCrouching) {
+                        if (snowballShieldTimer > 0) {
+                            // Shield blocks melee attack
+                            createParticles(yeti.x + yeti.width / 2, yeti.y + yeti.height / 2, '#6bf', 10);
+                            playSound('hit');
+                        } else {
+                            damageYeti(Math.floor(5 * (snowman.damage || 1)));
+                        }
+                        snowman.attackCooldown = 60;
+                    }
+                }
+                
+                snowman.x += snowman.velocityX;
+                snowman.attackCooldown--;
+                snowman.hitFlash = Math.max(0, snowman.hitFlash - 1);
+            });
+            
+            // Remove dead snowmen
+            snowmen = snowmen.filter(s => s.health > 0);
+        }
+
+        function throwSnowball(snowman) {
+            const direction = yeti.x > snowman.x ? 1 : -1;
+            snowballs.push({
+                x: snowman.x + snowman.width / 2,
+                y: snowman.y + snowman.height * 0.3,
+                velocityX: direction * 6,
+                velocityY: -2,
+                size: 10
+            });
+        }
+
+        function updateSnowballs() {
+            snowballs.forEach((ball, index) => {
+                ball.x += ball.velocityX;
+                ball.y += ball.velocityY;
+                ball.velocityY += 0.15;
+                
+                // Check collision with yeti
+                if (!yeti.isCrouching && yeti.invincible <= 0 &&
+                    ball.x > yeti.x && ball.x < yeti.x + yeti.width &&
+                    ball.y > yeti.y && ball.y < yeti.y + yeti.height) {
+                    
+                    if (snowballShieldTimer > 0) {
+                        // Shield blocks snowball
+                        createParticles(ball.x, ball.y, '#6bf', 8);
+                        playSound('hit');
+                    } else {
+                        damageYeti(4);
+                    }
+                    createParticles(ball.x, ball.y, '#fff', 5);
+                    snowballs.splice(index, 1);
+                }
+            });
+            
+            // Remove off-screen snowballs
+            snowballs = snowballs.filter(b => b.y < canvas.height && b.x > -50 && b.x < canvas.width + 50);
+        }
+
+        function drawSnowballs() {
+            snowballs.forEach(ball => {
+                ctx.fillStyle = '#f0f8ff';
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#c0d0e0';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Trail
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(ball.x - ball.velocityX * 2, ball.y - ball.velocityY * 2, ball.size * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function damageYeti(amount) {
+            if (yeti.isCrouching) {
+                // Blocking reduces damage
+                amount = Math.floor(amount * 0.3);
+                createParticles(yeti.x + yeti.width / 2, yeti.y + yeti.height / 2, '#5af', 3);
+            }
+            
+            yeti.health -= amount;
+            yeti.invincible = 30;
+            screenShake = 8;
+            playSound('damage');
+            
+            if (yeti.health <= 0) {
+                gameOver();
+            }
+            
+            updateHUD();
+        }
+
+        function attack() {
+            if (yeti.attackCooldown > 0) return;
+            
+            yeti.isAttacking = true;
+            yeti.attackFrame = 0;
+            
+            if (yeti.weapon === WEAPONS.FLAMETHROWER) {
+                if (yeti.fuel > 0 && yeti.reloadTimer <= 0) {
+                    fireFlame();
+                    yeti.fuel -= 1;
+                    yeti.attackCooldown = yeti.weapon.speed;
+                    
+                    if (yeti.fuel <= 0) {
+                        yeti.reloadTimer = 150;
+                    }
+                }
+            } else if (yeti.weapon === WEAPONS.ROCKET) {
+                if (yeti.rockets > 0 && yeti.reloadTimer <= 0) {
+                    fireRocket();
+                    yeti.rockets--;
+                    yeti.attackCooldown = yeti.weapon.speed;
+                    
+                    // Heavy recoil
+                    yeti.velocityX -= yeti.facing * 3;
+                    
+                    if (yeti.rockets <= 0) {
+                        yeti.reloadTimer = 180; // Longer reload for rockets
+                    }
+                }
+            } else if (yeti.weapon === WEAPONS.GUN) {
+                if (yeti.ammo > 0 && yeti.reloadTimer <= 0) {
+                    fireBullet();
+                    yeti.ammo--;
+                    yeti.attackCooldown = yeti.weapon.speed;
+                    
+                    // Recoil
+                    yeti.velocityX -= yeti.facing * 1;
+                    
+                    if (yeti.ammo <= 0) {
+                        yeti.reloadTimer = 120;
+                    }
+                }
+            } else {
+                yeti.attackCooldown = yeti.weapon.speed;
+                playSound(yeti.weapon.sound);
+                
+                // Check hits
+                const attackX = yeti.facing === 1 ? yeti.x + yeti.width : yeti.x - yeti.weapon.range;
+                const attackWidth = yeti.weapon.range;
+                
+                let hitCount = 0;
+                snowmen.forEach(snowman => {
+                    if (snowman.x + snowman.width > attackX && snowman.x < attackX + attackWidth) {
+                        let damage = yeti.weapon.damage;
+                        
+                        // Combo bonus for sword
+                        if (yeti.weapon === WEAPONS.SWORD && Date.now() - yeti.lastComboTime < 500) {
+                            yeti.comboChain++;
+                            damage *= (1 + yeti.comboChain * 0.2);
+                        } else {
+                            yeti.comboChain = 0;
+                        }
+                        yeti.lastComboTime = Date.now();
+                        
+                        // Shield check
+                        if (snowman.hasShield && snowman.shieldHealth > 0) {
+                            snowman.shieldHealth -= damage;
+                            createParticles(snowman.x + snowman.width, snowman.y + snowman.height / 2, '#4080ff', 5);
+                            playSound('hit');
+                        } else {
+                            snowman.health -= damage;
+                            snowman.hitFlash = 15;
+                            createParticles(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, '#fff', 8);
+                            playSound('hit');
+                            
+                            if (snowman.health <= 0) {
+                                killSnowman(snowman);
+                                hitCount++;
+                            }
+                        }
+                    }
+                });
+                
+                if (hitCount > 1) {
+                    comboCount += hitCount;
+                    comboTimer = 60;
+                    showCombo(hitCount);
+                }
+                
+                screenShake = 3;
+            }
+            
+            updateHUD();
+        }
+        
+        function meleeAttack() {
+            if (!yeti.secondaryWeapon || yeti.meleeCooldown > 0) return;
+            
+            yeti.isMeleeAttacking = true;
+            yeti.meleeAttackFrame = 0;
+            yeti.meleeCooldown = WEAPONS.SWORD.speed;
+            
+            playSound(WEAPONS.SWORD.sound);
+            
+            // Check hits with sword
+            const attackX = yeti.facing === 1 ? yeti.x + yeti.width : yeti.x - WEAPONS.SWORD.range;
+            const attackWidth = WEAPONS.SWORD.range;
+            
+            let hitCount = 0;
+            snowmen.forEach(snowman => {
+                if (snowman.x + snowman.width > attackX && snowman.x < attackX + attackWidth) {
+                    let damage = WEAPONS.SWORD.damage;
+                    
+                    // Combo bonus
+                    if (Date.now() - yeti.lastComboTime < 500) {
+                        yeti.comboChain++;
+                        damage *= (1 + yeti.comboChain * 0.2);
+                    } else {
+                        yeti.comboChain = 0;
+                    }
+                    yeti.lastComboTime = Date.now();
+                    
+                    if (snowman.hasShield && snowman.shieldHealth > 0) {
+                        snowman.shieldHealth -= damage;
+                        createParticles(snowman.x + snowman.width, snowman.y + snowman.height / 2, '#4080ff', 5);
+                        playSound('hit');
+                    } else {
+                        snowman.health -= damage;
+                        snowman.hitFlash = 15;
+                        createParticles(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, '#fff', 8);
+                        playSound('hit');
+                        
+                        if (snowman.health <= 0) {
+                            killSnowman(snowman);
+                            hitCount++;
+                        }
+                    }
+                }
+            });
+            
+            if (hitCount > 1) {
+                comboCount += hitCount;
+                comboTimer = 60;
+                showCombo(hitCount);
+            }
+            
+            screenShake = 4;
+        }
+        
+        function fireRocket() {
+            playSound('rocket');
+            rockets.push({
+                x: yeti.x + (yeti.facing === 1 ? yeti.width + 30 : -20),
+                y: yeti.y + yeti.height * 0.4,
+                velocityX: yeti.facing * 10,
+                damage: WEAPONS.ROCKET.damage,
+                trail: []
+            });
+            
+            // Launch flash particles
+            for (let i = 0; i < 8; i++) {
+                particles.push({
+                    x: yeti.x + (yeti.facing === 1 ? yeti.width + 30 : 0),
+                    y: yeti.y + yeti.height * 0.4,
+                    velocityX: yeti.facing * (3 + Math.random() * 4),
+                    velocityY: (Math.random() - 0.5) * 6,
+                    life: 15,
+                    color: Math.random() < 0.5 ? '#ff4400' : '#ffaa00',
+                    size: 4 + Math.random() * 4
+                });
+            }
+            
+            screenShake = 6;
+        }
+        
+        function updateRockets() {
+            rockets.forEach((rocket, index) => {
+                rocket.x += rocket.velocityX;
+                
+                // Add trail
+                rocket.trail.push({ x: rocket.x, y: rocket.y, life: 20 });
+                rocket.trail = rocket.trail.filter(t => {
+                    t.life--;
+                    return t.life > 0;
+                });
+                
+                // Smoke trail particles
+                if (Math.random() < 0.5) {
+                    particles.push({
+                        x: rocket.x - rocket.velocityX,
+                        y: rocket.y + (Math.random() - 0.5) * 10,
+                        velocityX: -rocket.velocityX * 0.1 + (Math.random() - 0.5) * 2,
+                        velocityY: (Math.random() - 0.5) * 2,
+                        life: 20,
+                        color: '#888',
+                        size: 3 + Math.random() * 3
+                    });
+                }
+                
+                // Check hits
+                let exploded = false;
+                snowmen.forEach(snowman => {
+                    if (!exploded && 
+                        rocket.x > snowman.x - 20 && rocket.x < snowman.x + snowman.width + 20 &&
+                        rocket.y > snowman.y - 20 && rocket.y < snowman.y + snowman.height + 20) {
+                        explodeRocket(rocket.x, rocket.y);
+                        exploded = true;
+                    }
+                });
+                
+                if (exploded || rocket.x < -50 || rocket.x > canvas.width + 50) {
+                    rockets.splice(index, 1);
+                }
+            });
+        }
+        
+        function explodeRocket(x, y) {
+            playSound('explosion');
+            screenShake = 12;
+            
+            // Explosion particles
+            for (let i = 0; i < 30; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 3 + Math.random() * 8;
+                particles.push({
+                    x: x,
+                    y: y,
+                    velocityX: Math.cos(angle) * speed,
+                    velocityY: Math.sin(angle) * speed,
+                    life: 30 + Math.random() * 20,
+                    color: ['#ff4400', '#ffaa00', '#ff0000', '#ffff00'][Math.floor(Math.random() * 4)],
+                    size: 5 + Math.random() * 8
+                });
+            }
+            
+            // Damage all snowmen in radius
+            const explosionRadius = 120;
+            snowmen.forEach(snowman => {
+                const dist = Math.sqrt(
+                    Math.pow(snowman.x + snowman.width / 2 - x, 2) +
+                    Math.pow(snowman.y + snowman.height / 2 - y, 2)
+                );
+                
+                if (dist < explosionRadius) {
+                    const damage = WEAPONS.ROCKET.damage * (1 - dist / explosionRadius);
+                    
+                    if (snowman.hasShield && snowman.shieldHealth > 0) {
+                        snowman.shieldHealth -= damage;
+                    } else {
+                        snowman.health -= damage;
+                        snowman.hitFlash = 20;
+                        // Knockback
+                        const knockbackDir = snowman.x > x ? 1 : -1;
+                        snowman.x += knockbackDir * (30 - dist / 4);
+                    }
+                    
+                    if (snowman.health <= 0) {
+                        killSnowman(snowman);
+                    }
+                }
+            });
+        }
+        
+        function drawRockets() {
+            rockets.forEach(rocket => {
+                // Draw trail
+                rocket.trail.forEach((t, i) => {
+                    ctx.globalAlpha = t.life / 20 * 0.5;
+                    ctx.fillStyle = '#ff6600';
+                    ctx.beginPath();
+                    ctx.arc(t.x, t.y, 4 * (t.life / 20), 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1;
+                
+                // Rocket body
+                ctx.fillStyle = '#444';
+                ctx.beginPath();
+                ctx.ellipse(rocket.x, rocket.y, 15, 6, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Rocket nose
+                ctx.fillStyle = '#c00';
+                const noseDir = rocket.velocityX > 0 ? 1 : -1;
+                ctx.beginPath();
+                ctx.moveTo(rocket.x + noseDir * 15, rocket.y);
+                ctx.lineTo(rocket.x + noseDir * 25, rocket.y - 4);
+                ctx.lineTo(rocket.x + noseDir * 25, rocket.y + 4);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Fins
+                ctx.fillStyle = '#666';
+                ctx.beginPath();
+                ctx.moveTo(rocket.x - noseDir * 12, rocket.y - 6);
+                ctx.lineTo(rocket.x - noseDir * 18, rocket.y - 12);
+                ctx.lineTo(rocket.x - noseDir * 15, rocket.y - 6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(rocket.x - noseDir * 12, rocket.y + 6);
+                ctx.lineTo(rocket.x - noseDir * 18, rocket.y + 12);
+                ctx.lineTo(rocket.x - noseDir * 15, rocket.y + 6);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Flame
+                ctx.fillStyle = '#ff4400';
+                ctx.beginPath();
+                ctx.moveTo(rocket.x - noseDir * 15, rocket.y);
+                ctx.lineTo(rocket.x - noseDir * (25 + Math.random() * 10), rocket.y - 3);
+                ctx.lineTo(rocket.x - noseDir * (25 + Math.random() * 10), rocket.y + 3);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffaa00';
+                ctx.beginPath();
+                ctx.moveTo(rocket.x - noseDir * 15, rocket.y);
+                ctx.lineTo(rocket.x - noseDir * (20 + Math.random() * 5), rocket.y - 2);
+                ctx.lineTo(rocket.x - noseDir * (20 + Math.random() * 5), rocket.y + 2);
+                ctx.closePath();
+                ctx.fill();
+            });
+        }
+        
+        function fireFlame() {
+            playSound('flame');
+            
+            // Create multiple flame particles
+            for (let i = 0; i < 5; i++) {
+                flames.push({
+                    x: yeti.x + (yeti.facing === 1 ? yeti.width + 20 : -20),
+                    y: yeti.y + yeti.height * 0.4 + (Math.random() - 0.5) * 20,
+                    velocityX: yeti.facing * (8 + Math.random() * 4),
+                    velocityY: (Math.random() - 0.5) * 3,
+                    life: 30 + Math.random() * 15,
+                    size: 10 + Math.random() * 10,
+                    damage: WEAPONS.FLAMETHROWER.damage,
+                    hasHit: []
+                });
+            }
+        }
+        
+        function updateFlames() {
+            flames.forEach((flame, index) => {
+                flame.x += flame.velocityX;
+                flame.y += flame.velocityY;
+                flame.velocityY += 0.05;
+                flame.life--;
+                flame.size *= 0.97;
+                
+                // Check hits against snowmen
+                snowmen.forEach(snowman => {
+                    if (!flame.hasHit.includes(snowman) &&
+                        flame.x > snowman.x - 10 && flame.x < snowman.x + snowman.width + 10 &&
+                        flame.y > snowman.y - 10 && flame.y < snowman.y + snowman.height + 10) {
+                        
+                        flame.hasHit.push(snowman);
+                        
+                        if (snowman.hasShield && snowman.shieldHealth > 0) {
+                            snowman.shieldHealth -= flame.damage;
+                        } else {
+                            snowman.health -= flame.damage;
+                            snowman.hitFlash = 5;
+                            
+                            // Set snowman on fire effect
+                            if (Math.random() < 0.3) {
+                                createParticles(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, '#ff6600', 2);
+                            }
+                            
+                            if (snowman.health <= 0) {
+                                killSnowman(snowman);
+                            }
+                        }
+                    }
+                });
+                
+                if (flame.life <= 0 || flame.size < 2) {
+                    flames.splice(index, 1);
+                }
+            });
+        }
+        
+        function drawFlames() {
+            flames.forEach(flame => {
+                const alpha = flame.life / 45;
+                
+                // Outer glow
+                ctx.globalAlpha = alpha * 0.3;
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.arc(flame.x, flame.y, flame.size * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Main flame
+                ctx.globalAlpha = alpha * 0.8;
+                ctx.fillStyle = '#ff6600';
+                ctx.beginPath();
+                ctx.arc(flame.x, flame.y, flame.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Inner bright core
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = '#ffff00';
+                ctx.beginPath();
+                ctx.arc(flame.x, flame.y, flame.size * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function fireBullet() {
+            playSound('gunshot');
+            bullets.push({
+                x: yeti.x + (yeti.facing === 1 ? yeti.width + 65 : -20),
+                y: yeti.y + yeti.height * 0.4,
+                velocityX: yeti.facing * 15,
+                damage: yeti.weapon.damage
+            });
+            
+            // Muzzle flash particles
+            for (let i = 0; i < 5; i++) {
+                particles.push({
+                    x: yeti.x + (yeti.facing === 1 ? yeti.width + 65 : 0),
+                    y: yeti.y + yeti.height * 0.4,
+                    velocityX: yeti.facing * (5 + Math.random() * 5),
+                    velocityY: (Math.random() - 0.5) * 4,
+                    life: 10,
+                    color: Math.random() < 0.5 ? '#ff8800' : '#ffff00',
+                    size: 3 + Math.random() * 3
+                });
+            }
+        }
+
+        function updateBullets() {
+            bullets.forEach((bullet, index) => {
+                bullet.x += bullet.velocityX;
+                
+                // Check hits
+                snowmen.forEach(snowman => {
+                    if (bullet.x > snowman.x && bullet.x < snowman.x + snowman.width &&
+                        bullet.y > snowman.y && bullet.y < snowman.y + snowman.height) {
+                        
+                        if (snowman.hasShield && snowman.shieldHealth > 0) {
+                            snowman.shieldHealth -= bullet.damage;
+                            createParticles(bullet.x, bullet.y, '#4080ff', 3);
+                        } else {
+                            snowman.health -= bullet.damage;
+                            snowman.hitFlash = 10;
+                            snowman.velocityX = bullet.velocityX * 0.3;
+                            createParticles(bullet.x, bullet.y, '#fff', 5);
+                            
+                            if (snowman.health <= 0) {
+                                killSnowman(snowman);
+                            }
+                        }
+                        
+                        bullets.splice(index, 1);
+                        playSound('hit');
+                    }
+                });
+            });
+            
+            // Remove off-screen bullets
+            bullets = bullets.filter(b => b.x > -50 && b.x < canvas.width + 50);
+        }
+
+        function drawBullets() {
+            bullets.forEach(bullet => {
+                // Bullet trail
+                ctx.strokeStyle = 'rgba(255, 200, 100, 0.5)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(bullet.x, bullet.y);
+                ctx.lineTo(bullet.x - bullet.velocityX * 2, bullet.y);
+                ctx.stroke();
+                
+                // Bullet
+                ctx.fillStyle = '#ffcc00';
+                ctx.beginPath();
+                ctx.ellipse(bullet.x, bullet.y, 8, 3, 0, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function killSnowman(snowman) {
+            kills++;
+            score += snowman.isElite ? 200 : 100;
+            
+            playSound('death');
+            createParticles(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, '#fff', 20);
+            createParticles(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, '#8cf', 10);
+            
+            // Drop heart every 5 kills
+            if (kills % 5 === 0) {
+                spawnPowerup(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, 'heart');
+            }
+            
+            // Randomly drop shield (10% chance, but not on same kill as heart)
+            if (kills % 5 !== 0 && Math.random() < 0.1) {
+                spawnPowerup(snowman.x + snowman.width / 2, snowman.y + snowman.height / 2, 'shield');
+            }
+            
+            // Check weapon unlocks
+            checkWeaponUnlock();
+            updateHUD();
+        }
+        
+        function spawnPowerup(x, y, type) {
+            powerups.push({
+                x: x,
+                y: y,
+                type: type,
+                velocityY: -5,
+                bobOffset: Math.random() * Math.PI * 2,
+                life: 600 // 10 seconds at 60fps
+            });
+            playSound('unlock');
+        }
+        
+        function updatePowerups() {
+            powerups.forEach((powerup, index) => {
+                // Apply gravity until on ground
+                if (powerup.y < 420) {
+                    powerup.velocityY += 0.3;
+                    powerup.y += powerup.velocityY;
+                } else {
+                    powerup.y = 420;
+                    powerup.velocityY = 0;
+                }
+                
+                powerup.life--;
+                
+                // Check collision with yeti
+                const dist = Math.sqrt(
+                    Math.pow(yeti.x + yeti.width / 2 - powerup.x, 2) +
+                    Math.pow(yeti.y + yeti.height / 2 - powerup.y, 2)
+                );
+                
+                if (dist < 50) {
+                    collectPowerup(powerup);
+                    powerups.splice(index, 1);
+                    return;
+                }
+                
+                // Remove expired powerups
+                if (powerup.life <= 0) {
+                    powerups.splice(index, 1);
+                }
+            });
+        }
+        
+        function collectPowerup(powerup) {
+            playSound('unlock');
+            
+            if (powerup.type === 'heart') {
+                yeti.health = Math.min(yeti.maxHealth, yeti.health + 25);
+                createParticles(powerup.x, powerup.y, '#ff6b6b', 15);
+                floatingTexts.push({
+                    x: powerup.x,
+                    y: powerup.y - 20,
+                    text: '+25 HP',
+                    life: 60
+                });
+            } else if (powerup.type === 'shield') {
+                snowballShieldTimer = 600; // 10 seconds
+                createParticles(powerup.x, powerup.y, '#6bf', 15);
+                floatingTexts.push({
+                    x: powerup.x,
+                    y: powerup.y - 20,
+                    text: 'SHIELD!',
+                    life: 60
+                });
+            }
+            
+            updateHUD();
+        }
+        
+        function drawPowerups() {
+            powerups.forEach(powerup => {
+                const bobY = Math.sin(Date.now() / 200 + powerup.bobOffset) * 5;
+                const pulse = 1 + Math.sin(Date.now() / 150) * 0.1;
+                
+                // Glow effect
+                ctx.save();
+                ctx.globalAlpha = 0.5 + Math.sin(Date.now() / 200) * 0.3;
+                
+                if (powerup.type === 'heart') {
+                    // Heart glow
+                    ctx.fillStyle = '#ff6b6b';
+                    ctx.beginPath();
+                    ctx.arc(powerup.x, powerup.y + bobY, 25 * pulse, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.globalAlpha = 1;
+                    
+                    // Heart shape
+                    ctx.fillStyle = '#ff4757';
+                    ctx.beginPath();
+                    const hx = powerup.x;
+                    const hy = powerup.y + bobY;
+                    const size = 15 * pulse;
+                    ctx.moveTo(hx, hy + size * 0.3);
+                    ctx.bezierCurveTo(hx - size, hy - size * 0.5, hx - size, hy + size * 0.5, hx, hy + size);
+                    ctx.bezierCurveTo(hx + size, hy + size * 0.5, hx + size, hy - size * 0.5, hx, hy + size * 0.3);
+                    ctx.fill();
+                    
+                    // Shine
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                    ctx.beginPath();
+                    ctx.ellipse(hx - 5, hy - 2, 4, 3, -0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                } else if (powerup.type === 'shield') {
+                    // Shield glow
+                    ctx.fillStyle = '#6bf';
+                    ctx.beginPath();
+                    ctx.arc(powerup.x, powerup.y + bobY, 25 * pulse, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.globalAlpha = 1;
+                    
+                    // Shield shape
+                    ctx.fillStyle = '#4facfe';
+                    ctx.beginPath();
+                    const sx = powerup.x;
+                    const sy = powerup.y + bobY;
+                    const sw = 16 * pulse;
+                    const sh = 20 * pulse;
+                    ctx.moveTo(sx, sy - sh);
+                    ctx.lineTo(sx + sw, sy - sh * 0.5);
+                    ctx.lineTo(sx + sw, sy + sh * 0.2);
+                    ctx.quadraticCurveTo(sx, sy + sh, sx, sy + sh);
+                    ctx.quadraticCurveTo(sx, sy + sh, sx - sw, sy + sh * 0.2);
+                    ctx.lineTo(sx - sw, sy - sh * 0.5);
+                    ctx.closePath();
+                    ctx.fill();
+                    
+                    // Shield border
+                    ctx.strokeStyle = '#00d2ff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    // Shield emblem (snowflake)
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy - 8);
+                    ctx.lineTo(sx, sy + 8);
+                    ctx.moveTo(sx - 7, sy - 4);
+                    ctx.lineTo(sx + 7, sy + 4);
+                    ctx.moveTo(sx - 7, sy + 4);
+                    ctx.lineTo(sx + 7, sy - 4);
+                    ctx.stroke();
+                }
+                
+                // Blinking when about to expire
+                if (powerup.life < 120 && Math.floor(powerup.life / 10) % 2 === 0) {
+                    ctx.globalAlpha = 0.3;
+                }
+                
+                ctx.restore();
+            });
+        }
+
+        function checkWeaponUnlock() {
+            // Health upgrade at 150 kills
+            if (kills >= 150 && yeti.maxHealth === 100) {
+                yeti.maxHealth = 150;
+                yeti.health = Math.min(yeti.health + 50, yeti.maxHealth);
+                playSound('unlock');
+                weaponUnlockDisplay = {
+                    weapon: { name: 'MAX HEALTH+', icon: '❤️' },
+                    timer: 120
+                };
+                floatingTexts.push({
+                    x: yeti.x + yeti.width / 2,
+                    y: yeti.y - 30,
+                    text: '+50 MAX HP!',
+                    life: 90
+                });
+                updateHUD();
+            }
+            
+            if (kills >= WEAPONS.FLAMETHROWER.unlockKills && yeti.weapon !== WEAPONS.FLAMETHROWER) {
+                unlockWeapon(WEAPONS.FLAMETHROWER);
+                yeti.secondaryWeapon = WEAPONS.SWORD;
+            } else if (kills >= WEAPONS.ROCKET.unlockKills && yeti.weapon !== WEAPONS.ROCKET && yeti.weapon !== WEAPONS.FLAMETHROWER) {
+                unlockWeapon(WEAPONS.ROCKET);
+                yeti.secondaryWeapon = WEAPONS.SWORD;
+            } else if (kills >= WEAPONS.GUN.unlockKills && yeti.weapon !== WEAPONS.GUN && yeti.weapon !== WEAPONS.ROCKET) {
+                unlockWeapon(WEAPONS.GUN);
+                yeti.secondaryWeapon = WEAPONS.SWORD;
+            } else if (kills >= WEAPONS.SWORD.unlockKills && yeti.weapon !== WEAPONS.SWORD && yeti.weapon !== WEAPONS.GUN && yeti.weapon !== WEAPONS.ROCKET) {
+                unlockWeapon(WEAPONS.SWORD);
+            } else if (kills >= WEAPONS.AXE.unlockKills && yeti.weapon !== WEAPONS.AXE && yeti.weapon !== WEAPONS.SWORD && yeti.weapon !== WEAPONS.GUN && yeti.weapon !== WEAPONS.ROCKET) {
+                unlockWeapon(WEAPONS.AXE);
+            }
+        }
+
+        function unlockWeapon(weapon) {
+            yeti.weapon = weapon;
+            playSound('unlock');
+            
+            weaponUnlockDisplay = {
+                weapon: weapon,
+                timer: 120
+            };
+            
+            updateHUD();
+        }
+
+        function createParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    velocityX: (Math.random() - 0.5) * 10,
+                    velocityY: (Math.random() - 0.5) * 10 - 3,
+                    life: 30 + Math.random() * 20,
+                    color: color,
+                    size: 3 + Math.random() * 5
+                });
+            }
+        }
+
+        function updateParticles() {
+            particles.forEach((p, index) => {
+                p.x += p.velocityX;
+                p.y += p.velocityY;
+                p.velocityY += 0.3;
+                p.life--;
+                p.size *= 0.95;
+                
+                if (p.life <= 0 || p.size < 0.5) {
+                    particles.splice(index, 1);
+                }
+            });
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life / 50;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function showCombo(count) {
+            floatingTexts.push({
+                x: yeti.x + yeti.width / 2,
+                y: yeti.y - 30,
+                text: `${count}x COMBO!`,
+                life: 60
+            });
+        }
+
+        function drawFloatingTexts() {
+            floatingTexts.forEach((ft, index) => {
+                ctx.save();
+                ctx.globalAlpha = ft.life / 60;
+                ctx.font = 'bold 24px "Bangers", cursive';
+                ctx.fillStyle = '#ff0';
+                ctx.strokeStyle = '#a40';
+                ctx.lineWidth = 3;
+                ctx.textAlign = 'center';
+                ctx.strokeText(ft.text, ft.x, ft.y);
+                ctx.fillText(ft.text, ft.x, ft.y);
+                ctx.restore();
+                
+                ft.y -= 1.5;
+                ft.life--;
+                
+                if (ft.life <= 0) {
+                    floatingTexts.splice(index, 1);
+                }
+            });
+        }
+
+        function updateHUD() {
+            document.getElementById('scoreDisplay').textContent = score.toLocaleString();
+            document.getElementById('killsDisplay').textContent = kills;
+            document.getElementById('weaponIcon').textContent = yeti.weapon.icon;
+            
+            // Show secondary weapon if available
+            if (yeti.secondaryWeapon) {
+                document.getElementById('weaponName').textContent = yeti.weapon.name + ' + ⚔️';
+            } else {
+                document.getElementById('weaponName').textContent = yeti.weapon.name;
+            }
+            
+            const healthPercent = (yeti.health / yeti.maxHealth) * 100;
+            const healthFill = document.getElementById('healthFill');
+            healthFill.style.width = healthPercent + '%';
+            healthFill.className = 'health-fill' + (healthPercent < 30 ? ' low' : '');
+            
+            const ammoSection = document.getElementById('ammoSection');
+            if (yeti.weapon === WEAPONS.GUN) {
+                ammoSection.style.display = 'block';
+                document.getElementById('ammoFill').style.width = (yeti.ammo / yeti.maxAmmo) * 100 + '%';
+            } else if (yeti.weapon === WEAPONS.ROCKET) {
+                ammoSection.style.display = 'block';
+                document.getElementById('ammoFill').style.width = (yeti.rockets / yeti.maxRockets) * 100 + '%';
+            } else if (yeti.weapon === WEAPONS.FLAMETHROWER) {
+                ammoSection.style.display = 'block';
+                document.getElementById('ammoFill').style.width = (yeti.fuel / yeti.maxFuel) * 100 + '%';
+            } else {
+                ammoSection.style.display = 'none';
+            }
+            
+            const shieldSection = document.getElementById('shieldSection');
+            if (snowballShieldTimer > 0) {
+                shieldSection.style.display = 'block';
+                document.getElementById('shieldFill').style.width = (snowballShieldTimer / 600) * 100 + '%';
+            } else {
+                shieldSection.style.display = 'none';
+            }
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = `Final Score: ${score.toLocaleString()} | Kills: ${kills}`;
+            document.getElementById('gameOverOverlay').classList.add('visible');
+        }
+
+        function resetGame() {
+            yeti.x = 450;
+            yeti.y = 350;
+            yeti.health = 100;
+            yeti.maxHealth = 100;
+            yeti.weapon = WEAPONS.FISTS;
+            yeti.secondaryWeapon = null;
+            yeti.ammo = 50;
+            yeti.rockets = 5;
+            yeti.fuel = 100;
+            yeti.reloadTimer = 0;
+            yeti.invincible = 0;
+            yeti.isAttacking = false;
+            yeti.isMeleeAttacking = false;
+            yeti.attackCooldown = 0;
+            yeti.meleeCooldown = 0;
+            yeti.comboChain = 0;
+            
+            score = 0;
+            kills = 0;
+            snowmen = [];
+            bullets = [];
+            rockets = [];
+            flames = [];
+            snowballs = [];
+            particles = [];
+            floatingTexts = [];
+            powerups = [];
+            screenShake = 0;
+            weaponUnlockDisplay = null;
+            snowballShieldTimer = 0;
+            
+            updateHUD();
+        }
+
+        function update() {
+            if (!gameRunning) return;
+            
+            // Movement
+            if (keys.left) {
+                yeti.velocityX = -yeti.speed;
+                yeti.facing = -1;
+            } else if (keys.right) {
+                yeti.velocityX = yeti.speed;
+                yeti.facing = 1;
+            } else {
+                yeti.velocityX *= 0.8;
+            }
+            
+            // Apply ice slipping
+            if (Math.abs(yeti.velocityX) > 0.1) {
+                yeti.velocityX *= 1.02;
+                yeti.velocityX = Math.max(-8, Math.min(8, yeti.velocityX));
+            }
+            
+            // Jump
+            if (keys.up && !yeti.isJumping) {
+                yeti.velocityY = yeti.jumpForce;
+                yeti.isJumping = true;
+                playSound('jump');
+            }
+            
+            // Crouch
+            yeti.isCrouching = keys.down && !yeti.isJumping;
+            
+            // Gravity
+            yeti.velocityY += 0.8;
+            
+            // Apply velocity
+            yeti.x += yeti.velocityX;
+            yeti.y += yeti.velocityY;
+            
+            // Ground collision
+            if (yeti.y > 350) {
+                yeti.y = 350;
+                yeti.velocityY = 0;
+                yeti.isJumping = false;
+            }
+            
+            // Boundary
+            yeti.x = Math.max(0, Math.min(canvas.width - yeti.width, yeti.x));
+            
+            // Attack
+            if (keys.space) {
+                attack();
+            }
+            
+            // Melee attack (when having secondary weapon)
+            if (keys.melee && yeti.secondaryWeapon) {
+                meleeAttack();
+            }
+            
+            // Update attack animation
+            if (yeti.isAttacking) {
+                yeti.attackFrame++;
+                if (yeti.attackFrame > (yeti.weapon === WEAPONS.GUN || yeti.weapon === WEAPONS.ROCKET ? 5 : 12)) {
+                    yeti.isAttacking = false;
+                    yeti.attackFrame = 0;
+                }
+            }
+            
+            // Update melee attack animation
+            if (yeti.isMeleeAttacking) {
+                yeti.meleeAttackFrame++;
+                if (yeti.meleeAttackFrame > 12) {
+                    yeti.isMeleeAttacking = false;
+                    yeti.meleeAttackFrame = 0;
+                }
+            }
+            
+            // Cooldowns
+            yeti.attackCooldown = Math.max(0, yeti.attackCooldown - 1);
+            yeti.meleeCooldown = Math.max(0, yeti.meleeCooldown - 1);
+            yeti.invincible = Math.max(0, yeti.invincible - 1);
+            
+            // Reload
+            if (yeti.reloadTimer > 0) {
+                yeti.reloadTimer--;
+                if (yeti.reloadTimer === 0) {
+                    if (yeti.weapon === WEAPONS.FLAMETHROWER) {
+                        yeti.fuel = yeti.maxFuel;
+                    } else if (yeti.weapon === WEAPONS.ROCKET) {
+                        yeti.rockets = yeti.maxRockets;
+                    } else {
+                        yeti.ammo = yeti.maxAmmo;
+                    }
+                    updateHUD();
+                }
+            }
+            
+            // Weapon unlock display
+            if (weaponUnlockDisplay) {
+                weaponUnlockDisplay.timer--;
+                if (weaponUnlockDisplay.timer <= 0) {
+                    weaponUnlockDisplay = null;
+                }
+            }
+            
+            // Screen shake decay
+            screenShake *= 0.9;
+            
+            // Update entities
+            updateSnowmen();
+            updateSnowballs();
+            updateBullets();
+            updateRockets();
+            updateFlames();
+            updateParticles();
+            updatePowerups();
+            
+            // Update shield timer
+            if (snowballShieldTimer > 0) {
+                snowballShieldTimer--;
+                updateHUD();
+            }
+            
+            // Combo timer
+            if (comboTimer > 0) {
+                comboTimer--;
+                if (comboTimer === 0) comboCount = 0;
+            }
+        }
+
+        function draw() {
+            ctx.save();
+            
+            // Apply screen shake
+            if (screenShake > 0.5) {
+                ctx.translate(
+                    (Math.random() - 0.5) * screenShake,
+                    (Math.random() - 0.5) * screenShake
+                );
+            }
+            
+            drawBackground();
+            
+            // Draw entities
+            snowmen.forEach(drawSnowman);
+            drawPowerups();
+            drawYeti();
+            drawSnowballs();
+            drawBullets();
+            drawRockets();
+            drawFlames();
+            drawParticles();
+            drawFloatingTexts();
+            
+            ctx.restore();
+            
+            // Draw weapon unlock notification
+            if (weaponUnlockDisplay) {
+                ctx.save();
+                ctx.fillStyle = `rgba(50, 0, 100, ${0.9 * (weaponUnlockDisplay.timer / 120)})`;
+                ctx.fillRect(canvas.width / 2 - 150, canvas.height / 2 - 60, 300, 120);
+                ctx.strokeStyle = `rgba(255, 0, 255, ${weaponUnlockDisplay.timer / 120})`;
+                ctx.lineWidth = 4;
+                ctx.strokeRect(canvas.width / 2 - 150, canvas.height / 2 - 60, 300, 120);
+                
+                ctx.font = '12px "Press Start 2P", monospace';
+                ctx.fillStyle = '#ff0';
+                ctx.textAlign = 'center';
+                ctx.fillText('NEW WEAPON UNLOCKED!', canvas.width / 2, canvas.height / 2 - 25);
+                
+                ctx.font = '32px "Bangers", cursive';
+                ctx.fillStyle = '#fff';
+                ctx.fillText(`${weaponUnlockDisplay.weapon.icon} ${weaponUnlockDisplay.weapon.name}`, canvas.width / 2, canvas.height / 2 + 20);
+                ctx.restore();
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft': keys.left = true; break;
+                case 'ArrowRight': keys.right = true; break;
+                case 'ArrowUp': keys.up = true; e.preventDefault(); break;
+                case 'ArrowDown': keys.down = true; e.preventDefault(); break;
+                case ' ': keys.space = true; e.preventDefault(); break;
+                case 'e': case 'E': keys.melee = true; e.preventDefault(); break;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft': keys.left = false; break;
+                case 'ArrowRight': keys.right = false; break;
+                case 'ArrowUp': keys.up = false; break;
+                case 'ArrowDown': keys.down = false; break;
+                case ' ': keys.space = false; break;
+                case 'e': case 'E': keys.melee = false; break;
+            }
+        });
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            initAudio();
+            document.getElementById('startOverlay').classList.add('hidden');
+            gameRunning = true;
+            resetGame();
+        });
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            document.getElementById('gameOverOverlay').classList.remove('visible');
+            gameRunning = true;
+            resetGame();
+        });
+
+        // Initialize
+        initBackground();
+        gameLoop();
+    </script>
+</body>
+</html>
