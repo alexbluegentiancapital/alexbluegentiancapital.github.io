@@ -200,6 +200,7 @@ const Index = () => {
             {[
               {
                 source: 'The Globe and Mail',
+                company: 'Dominion Dynamics',
                 href: 'https://www.theglobeandmail.com/business/economy/article-dominion-dynamics-arctic-sensor-nodes-seed-funding/',
                 title:
                   "Dominion Dynamics, vying to become Canadian defence 'neoprime,' raises $21-million led by Georgian",
@@ -208,6 +209,7 @@ const Index = () => {
               },
               {
                 source: 'The Globe and Mail',
+                company: 'Irréversible',
                 href:
                   'https://www.theglobeandmail.com/investing/markets/markets-news/GlobeNewswire/37242456/bdc-steps-up-its-defence-sector-footprint-with-investments-in-semiconductors-and-space-tech-and-a-new-strategic-partnership/',
                 title:
@@ -223,9 +225,14 @@ const Index = () => {
                 rel="noopener noreferrer"
                 className="group block overflow-hidden rounded-lg border border-border/50 bg-card/50 p-3 transition-all duration-300 hover:border-frost/50 hover:bg-card/80 sm:p-4 md:p-6"
               >
-                <span className="mb-1 inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:mb-2 sm:px-3 sm:py-1 sm:text-xs">
-                  {item.source}
-                </span>
+                <div className="mb-1 flex flex-wrap gap-2 sm:mb-2">
+                  <span className="inline-block rounded-full border border-frost/30 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
+                    {item.source}
+                  </span>
+                  <span className="inline-block rounded-full border border-frost/30 bg-frost/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-frost sm:px-3 sm:py-1 sm:text-xs">
+                    {item.company}
+                  </span>
+                </div>
                 <h3 className="mb-1 text-base font-semibold text-foreground transition-colors group-hover:text-frost sm:mb-2 sm:text-lg md:text-xl">
                   {item.title}
                 </h3>
