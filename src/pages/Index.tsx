@@ -169,6 +169,7 @@ const Index = () => {
               { name: 'Irréversible', link: 'https://www.irreversible.tech/', sector: 'Deep Tech', stage: 'Pre-Seed' },
               // { name: 'Arctic Training Centre', link: 'https://www.arctictrainingcentre.com/', sector: 'Digital Infrastructure & Cold Weather Technology', stage: 'Pre-Seed' },
               { name: 'Sentradel', link: 'https://www.sentradel.com/', sector: 'Artificial Intelligence', stage: 'Seed' },
+              { name: 'Supply Energetics', link: 'https://www.supplyenergetics.com/', sector: 'Deep Tech', stage: 'Seed' },
             ].map((company) => (
               <a
                 key={company.name}
