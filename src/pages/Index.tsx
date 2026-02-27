@@ -142,7 +142,7 @@ const Index = () => {
               </p>
             </div>
             <div className="space-y-2 border-l-2 border-frost/30 pl-3 sm:space-y-3 sm:pl-4 md:pl-6">
-              <h3 className="text-base font-semibold uppercase tracking-wider text-frost sm:text-lg md:text-xl">Digital Infrastructure</h3>
+              <h3 className="text-base font-semibold uppercase tracking-wider text-frost sm:text-lg md:text-xl">Infrastructure</h3>
               <p className="text-xs text-muted-foreground sm:text-sm md:text-base">
                 Supporting secure communications, cyber defence platforms, and resilient networks that form the backbone of modern defence operations.
               </p>
@@ -169,7 +169,8 @@ const Index = () => {
               { name: 'Irréversible', link: 'https://www.irreversible.tech/', sector: 'Deep Tech', stage: 'Pre-Seed' },
               // { name: 'Arctic Training Centre', link: 'https://www.arctictrainingcentre.com/', sector: 'Digital Infrastructure & Cold Weather Technology', stage: 'Pre-Seed' },
               { name: 'Sentradel', link: 'https://www.sentradel.com/', sector: 'Artificial Intelligence', stage: 'Seed' },
-              { name: 'Supply Energetics', link: 'https://www.supplyenergetics.com/', sector: 'Deep Tech', stage: 'Seed' },
+              { name: 'Supply Energetics', link: 'https://www.supplyenergetics.com/', sector: 'Infrastructure', stage: 'Seed' },
+              { name: 'Building-Bloc', link: 'https://building-bloc.com/', sector: 'Infrastructure & Deep Tech', stage: 'Pre-Seed' },
             ].map((company) => (
               <a
                 key={company.name}
