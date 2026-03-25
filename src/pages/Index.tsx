@@ -226,6 +226,13 @@ const Index = () => {
                 title: 'Ukraine needs more prosthetics. This Canadian company is ready to help',
                 description: 'Portfolio company Building-Bloc featured in The Globe and Mail for their modular prosthetics technology supporting Ukraine.',
               },
+              {
+                source: 'Dev Ukraine',
+                company: 'Sentradel',
+                href: 'https://dev.ua/en/news/sentradel-1755168507',
+                title: 'American startup Sentradel showed autonomous turrets for destroying FPV drones',
+                description: 'Portfolio company Sentradel featured for creating autonomous turrets with machine vision to affordably counter FPV drones.',
+              },
             ].map((item) => (
               <a
                 key={item.href}
