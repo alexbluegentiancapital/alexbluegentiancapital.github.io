@@ -219,6 +219,13 @@ const Index = () => {
                 description:
                   'Sector update on defence-related investments spanning semiconductors and space technology, plus a new strategic partnership.',
               },
+              {
+                source: 'The Globe and Mail',
+                company: 'Building-Bloc',
+                href: 'https://www.theglobeandmail.com/business/economy/article-ukraine-prosthetics-building-bloc-systems/',
+                title: 'Building-Bloc Systems brings modular prosthetics innovation to Ukraine',
+                description: 'Portfolio company Building-Bloc featured in The Globe and Mail for their work in modular prosthetics technology.',
+              },
             ].map((item) => (
               <a
                 key={item.href}
