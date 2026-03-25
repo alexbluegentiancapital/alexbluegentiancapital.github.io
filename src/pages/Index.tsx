@@ -223,8 +223,8 @@ const Index = () => {
                 source: 'The Globe and Mail',
                 company: 'Building-Bloc',
                 href: 'https://www.theglobeandmail.com/business/economy/article-ukraine-prosthetics-building-bloc-systems/',
-                title: 'Building-Bloc Systems brings modular prosthetics innovation to Ukraine',
-                description: 'Portfolio company Building-Bloc featured in The Globe and Mail for their work in modular prosthetics technology.',
+                title: 'Ukraine needs more prosthetics. This Canadian company is ready to help',
+                description: 'Portfolio company Building-Bloc featured in The Globe and Mail for their modular prosthetics technology supporting Ukraine.',
               },
             ].map((item) => (
               <a
