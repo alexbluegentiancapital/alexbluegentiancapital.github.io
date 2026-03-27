@@ -171,6 +171,7 @@ const Index = () => {
               { name: 'Sentradel', link: 'https://www.sentradel.com/', sector: 'Artificial Intelligence', stage: 'Seed' },
               { name: 'Supply Energetics', link: 'https://www.supplyenergetics.com/', sector: 'Infrastructure', stage: 'Seed' },
               { name: 'Building-Bloc', link: 'https://building-bloc.com/', sector: 'Infrastructure & Deep Tech', stage: 'Pre-Seed' },
+              { name: 'North Vector Dynamics', link: 'https://www.northvectordynamics.com/', sector: 'Deep Tech', stage: 'Seed' },
             ].map((company) => (
               <a
                 key={company.name}
