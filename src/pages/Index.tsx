@@ -73,14 +73,14 @@ const Index = () => {
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 sm:px-6">
           <div className="text-center">
             {/* Logo/Wordmark */}
-            <div 
-              className="mb-4 opacity-0 animate-fade-in-up"
-              style={{ animationDelay: '0.2s' }}
-            >
+            <div className="mb-4 animate-fade-in-up">
               <img 
                 src={frostbiteLogo} 
                 alt="Frostbite" 
-                className="h-10 w-auto animate-glow-pulse sm:h-14 md:h-16 lg:h-20 drop-shadow-[0_0_25px_rgba(155,220,255,0.4)]"
+                className="h-10 w-auto sm:h-14 md:h-16 lg:h-20 drop-shadow-[0_0_20px_rgba(155,220,255,0.3)]"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             </div>
             
